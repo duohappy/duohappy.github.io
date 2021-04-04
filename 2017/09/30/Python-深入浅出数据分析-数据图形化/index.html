@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouww.life","root":"/","images":"/images","scheme":"Pisces","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
+  </script>
+<meta name="description" content="文章未经允许，不可转载在阅读前，读一下Python-深入浅出数据分析-总结会更好点，以后遇到问题比如代码运行不了，再读读也行，&gt;-_-&lt; 问题的起源为了比较3个主页的好坏，收集了很多数据，以便用数据说话。这些数据实在太多，告诉我们的信息很多但是却多到难以捕捉。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python-深入浅出数据分析-数据图形化">
+<meta property="og:url" content="http://zhouww.life/2017/09/30/Python-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90-%E6%95%B0%E6%8D%AE%E5%9B%BE%E5%BD%A2%E5%8C%96/index.html">
+<meta property="og:site_name" content="duohappy&#39;s home">
+<meta property="og:description" content="文章未经允许，不可转载在阅读前，读一下Python-深入浅出数据分析-总结会更好点，以后遇到问题比如代码运行不了，再读读也行，&gt;-_-&lt; 问题的起源为了比较3个主页的好坏，收集了很多数据，以便用数据说话。这些数据实在太多，告诉我们的信息很多但是却多到难以捕捉。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://zhouww.life/images/2018_10_27/head_first_data_analysis_chapter4_1.jpg">
+<meta property="og:image" content="http://zhouww.life/images/2018_10_27/head_first_data_analysis_chapter4_2.jpg">
+<meta property="og:image" content="http://zhouww.life/images/2018_10_27/head_first_data_analysis_chapter4_all.png">
+<meta property="article:published_time" content="2017-09-30T01:49:41.000Z">
+<meta property="article:modified_time" content="2021-04-03T03:49:35.851Z">
+<meta property="article:author" content="duohappy">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="数据分析">
+<meta property="article:tag" content="pandas">
+<meta property="article:tag" content="matplotlib">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://zhouww.life/images/2018_10_27/head_first_data_analysis_chapter4_1.jpg">
+
+
+<link rel="canonical" href="http://zhouww.life/2017/09/30/Python-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90-%E6%95%B0%E6%8D%AE%E5%9B%BE%E5%BD%A2%E5%8C%96/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>Python-深入浅出数据分析-数据图形化 | duohappy's home</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">duohappy's home</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">hungry and foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E7%9A%84%E8%B5%B7%E6%BA%90"><span class="nav-number">1.</span> <span class="nav-text">问题的起源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BE%E5%BD%A2%E5%8C%96%E6%98%AF%E4%B8%8D%E6%98%AF%E4%BC%9A%E5%A5%BD%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">图形化是不是会好点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E7%A7%8D%E4%B8%8D%E5%90%8C%E7%9A%84%E4%B8%BB%E9%A1%B5%E8%A1%A8%E7%8E%B0"><span class="nav-number">3.</span> <span class="nav-text">三种不同的主页表现</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="duohappy"
+      src="/images/github_blog_myself.jpg">
+  <p class="site-author-name" itemprop="name">duohappy</p>
+  <div class="site-description" itemprop="description">怕什么真理无穷</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">86</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/duohappy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;duohappy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.zhihu.com/people/duohappy" title="https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;duohappy" rel="noopener" target="_blank">知乎</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/zhouww" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;zhouww" rel="noopener" target="_blank">博客园</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhouww.life/2017/09/30/Python-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90-%E6%95%B0%E6%8D%AE%E5%9B%BE%E5%BD%A2%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/github_blog_myself.jpg">
+      <meta itemprop="name" content="duohappy">
+      <meta itemprop="description" content="怕什么真理无穷">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="duohappy's home">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python-深入浅出数据分析-数据图形化
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-09-30 09:49:41" itemprop="dateCreated datePublished" datetime="2017-09-30T09:49:41+08:00">2017-09-30</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-04-03 11:49:35" itemprop="dateModified" datetime="2021-04-03T11:49:35+08:00">2021-04-03</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><strong>文章未经允许，不可转载</strong><br>在阅读前，读一下<a target="_blank" rel="noopener" href="http://www.zhouww.life/2017/09/30/Python-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90-%E6%80%BB%E7%BB%93/"><strong>Python-深入浅出数据分析-总结</strong></a>会更好点，以后遇到问题比如代码运行不了，再读读也行，&gt;-_-&lt;</p>
+<h1 id="问题的起源"><a href="#问题的起源" class="headerlink" title="问题的起源"></a>问题的起源</h1><p>为了比较3个主页的好坏，收集了很多数据，以便用数据说话。这些数据实在太多，告诉我们的信息很多但是却多到难以捕捉。</p>
+<span id="more"></span>
+<p><img src="/images/2018_10_27/head_first_data_analysis_chapter4_1.jpg"></p>
+<h1 id="图形化是不是会好点"><a href="#图形化是不是会好点" class="headerlink" title="图形化是不是会好点"></a>图形化是不是会好点</h1><p>利用书中提供的xls数据，来进行一下可视化，我们想知道Revenue和其他因素的关系，嗯，那就来探索性分析一下。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">%matplotlib inline</span><br><span class="line"></span><br><span class="line">df = pd.read_csv(<span class="string">&#x27;./hfda_ch04_home_page1.csv&#x27;</span>).iloc[:, <span class="number">1</span>:]</span><br><span class="line"></span><br><span class="line">fig = plt.figure(figsize=(<span class="number">8</span>, <span class="number">6</span>))</span><br><span class="line">ax = fig.add_subplot(<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">ax.axvline(x= <span class="number">10</span>, linestyle= <span class="string">&#x27;--&#x27;</span>)</span><br><span class="line">ax.axhline(y= <span class="number">40</span>, linestyle= <span class="string">&#x27;--&#x27;</span>)</span><br><span class="line"></span><br><span class="line">ax.axvline(x= df.TimeOnSite.mean())</span><br><span class="line">ax.axhline(y= df.Revenue.mean())</span><br><span class="line"></span><br><span class="line">ax.scatter(df.TimeOnSite.values, df.Revenue.values, s= <span class="number">72</span>, facecolors=<span class="string">&#x27;none&#x27;</span>, edgecolors=<span class="string">&#x27;r&#x27;</span>, linewidth= <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">ax.set_xticks(np.arange(<span class="number">0</span>, <span class="number">50</span>, <span class="number">10</span>))</span><br><span class="line">ax.set_yticks(np.arange(<span class="number">0</span>, <span class="number">120</span>, <span class="number">20</span>))</span><br><span class="line"></span><br><span class="line">ax.set_xlabel(<span class="string">&#x27;TimeOnSite&#x27;</span>)</span><br><span class="line">ax.set_ylabel(<span class="string">&#x27;Revenue&#x27;</span>)</span><br><span class="line">ax.set_title(<span class="string">&#x27;page1&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/2018_10_27/head_first_data_analysis_chapter4_2.jpg"></p>
+<h1 id="三种不同的主页表现"><a href="#三种不同的主页表现" class="headerlink" title="三种不同的主页表现"></a>三种不同的主页表现</h1><p>我们想知道三种不同主页的Revenue和其他因素的间的关系，以便我们可以挑选出好的主页。<br>由于官网只提供了page1的文件下载，所以自己造一些数据，这样就可以把自己的思路实现，这些数据已经放到了我的github上</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># plt.style.use(&#x27;ggplot&#x27;)  # 取消注释试试看</span></span><br><span class="line">fig = plt.figure(figsize=(<span class="number">20</span>, <span class="number">20</span>))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_var_revenue</span>(<span class="params">df_var, df_revenue, ax, ax_title</span>):</span></span><br><span class="line">    ax.axvline(x= df_var.mean())</span><br><span class="line">    ax.axhline(y= df_revenue.mean())</span><br><span class="line"></span><br><span class="line">    ax.scatter(df_var.values, df_revenue.values, s= <span class="number">72</span>, facecolors=<span class="string">&#x27;none&#x27;</span>, edgecolors=<span class="string">&#x27;r&#x27;</span>, linewidth= <span class="number">2</span>)</span><br><span class="line">    </span><br><span class="line">    ax.set_xlabel(df_var.name, fontsize= <span class="number">12</span>)</span><br><span class="line">    ax.set_ylabel(df_revenue.name, fontsize= <span class="number">12</span>)</span><br><span class="line">    ax.set_title(ax_title, fontsize= <span class="number">12</span>)</span><br><span class="line"></span><br><span class="line">all_pic_num = np.arange(<span class="number">1</span>, <span class="number">10</span>).reshape((<span class="number">3</span>,<span class="number">3</span>))</span><br><span class="line"><span class="keyword">for</span> row_index, col_index <span class="keyword">in</span> <span class="built_in">enumerate</span>(all_pic_num):</span><br><span class="line">    str_page = <span class="string">&#x27;page&#123;&#125;&#x27;</span>.<span class="built_in">format</span>(row_index + <span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">    df = pd.read_csv(<span class="string">&#x27;./hfda_ch04_home_&#123;&#125;.csv&#x27;</span>.<span class="built_in">format</span>(str_page)).iloc[:, <span class="number">2</span>:]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> col_index:</span><br><span class="line">        ax = fig.add_subplot(<span class="number">3</span>, <span class="number">3</span>, index)</span><br><span class="line">        </span><br><span class="line">        col_index_real = index - row_index*<span class="number">3</span></span><br><span class="line">        plot_var_revenue(df.iloc[:, col_index_real], df.Revenue, ax, str_page)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> col_index_real == <span class="number">1</span>:</span><br><span class="line">            ax.axvline(x= <span class="number">10</span>, linestyle= <span class="string">&#x27;--&#x27;</span>)</span><br><span class="line">            ax.axhline(y= <span class="number">40</span>, linestyle= <span class="string">&#x27;--&#x27;</span>)</span><br><span class="line">            ax.set_xticks(np.arange(<span class="number">0</span>, <span class="number">60</span>, <span class="number">10</span>))</span><br><span class="line">            ax.set_yticks(np.arange(<span class="number">0</span>, <span class="number">140</span>, <span class="number">20</span>))</span><br><span class="line">        <span class="keyword">elif</span> col_index_real == <span class="number">2</span>:</span><br><span class="line">            ax.axvline(x= <span class="number">40</span>, linestyle= <span class="string">&#x27;--&#x27;</span>)</span><br><span class="line">            ax.axhline(y= <span class="number">40</span>, linestyle= <span class="string">&#x27;--&#x27;</span>)</span><br><span class="line">            ax.set_xticks(np.arange(<span class="number">0</span>, <span class="number">140</span>, <span class="number">20</span>))</span><br><span class="line">            ax.set_yticks(np.arange(<span class="number">0</span>, <span class="number">140</span>, <span class="number">20</span>))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            ax.axvline(x= <span class="number">10</span>, linestyle= <span class="string">&#x27;--&#x27;</span>)</span><br><span class="line">            ax.axhline(y= <span class="number">40</span>, linestyle= <span class="string">&#x27;--&#x27;</span>)</span><br><span class="line">            ax.set_xticks(np.arange(<span class="number">0</span>, <span class="number">40</span>, <span class="number">5</span>))</span><br><span class="line">            ax.set_yticks(np.arange(<span class="number">0</span>, <span class="number">140</span>, <span class="number">20</span>)) </span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/2018_10_27/head_first_data_analysis_chapter4_all.png"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/" rel="tag"># 数据分析</a>
+              <a href="/tags/pandas/" rel="tag"># pandas</a>
+              <a href="/tags/matplotlib/" rel="tag"># matplotlib</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/09/30/Python-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90-%E6%9C%80%E4%BC%98%E5%8C%96/" rel="prev" title="Python-深入浅出数据分析-最优化">
+                  <i class="fa fa-chevron-left"></i> Python-深入浅出数据分析-最优化
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/09/30/Python-%E6%B7%B1%E5%85%A5%E6%B5%85%E5%87%BA%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90-%E4%B8%BB%E8%A7%82%E6%A6%82%E7%8E%87/" rel="next" title="Python-深入浅出数据分析-主观概率">
+                  Python-深入浅出数据分析-主观概率 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">duohappy</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

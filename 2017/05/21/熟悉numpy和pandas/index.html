@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouww.life","root":"/","images":"/images","scheme":"Pisces","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
+  </script>
+<meta name="description" content="本文参考资料：  主：https:&#x2F;&#x2F;www.gitbook.com&#x2F;book&#x2F;wizardforcel&#x2F;guide-to-data-mining&#x2F;details 辅：《集体智慧编程》  写在前面看了gitbook那本书的第二章和第三章，自己正在复习高等数学、线性代数、概率、统计的知识，所以想用numpy和pandas把第二章和第三章的逻辑实现，书中的代码有点复杂。自从有了这个想法后，gitboo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="熟悉numpy和pandas">
+<meta property="og:url" content="http://zhouww.life/2017/05/21/%E7%86%9F%E6%82%89numpy%E5%92%8Cpandas/index.html">
+<meta property="og:site_name" content="duohappy&#39;s home">
+<meta property="og:description" content="本文参考资料：  主：https:&#x2F;&#x2F;www.gitbook.com&#x2F;book&#x2F;wizardforcel&#x2F;guide-to-data-mining&#x2F;details 辅：《集体智慧编程》  写在前面看了gitbook那本书的第二章和第三章，自己正在复习高等数学、线性代数、概率、统计的知识，所以想用numpy和pandas把第二章和第三章的逻辑实现，书中的代码有点复杂。自从有了这个想法后，gitboo">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-05-21T07:53:15.000Z">
+<meta property="article:modified_time" content="2017-09-15T05:35:04.000Z">
+<meta property="article:author" content="duohappy">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="pandas">
+<meta property="article:tag" content="numpy">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://zhouww.life/2017/05/21/%E7%86%9F%E6%82%89numpy%E5%92%8Cpandas/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>熟悉numpy和pandas | duohappy's home</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">duohappy's home</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">hungry and foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%94%A8%E6%88%B7%E7%9A%84%E6%8E%A8%E8%8D%90"><span class="nav-number">2.</span> <span class="nav-text">基于用户的推荐</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B7%9D%E7%A6%BB"><span class="nav-number">2.1.</span> <span class="nav-text">距离</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9A%AE%E5%B0%94%E9%80%8A%E7%B3%BB%E6%95%B0"><span class="nav-number">2.2.</span> <span class="nav-text">皮尔逊系数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%99%E5%BC%A6%E5%AE%9A%E7%90%86"><span class="nav-number">2.3.</span> <span class="nav-text">余弦定理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#K%E6%9C%80%E9%82%BB%E8%BF%91%E7%AE%97%E6%B3%95"><span class="nav-number">2.4.</span> <span class="nav-text">K最邻近算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%89%A9%E5%93%81%E7%9A%84%E6%8E%A8%E8%8D%90"><span class="nav-number">3.</span> <span class="nav-text">基于物品的推荐</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%AD%A3%E7%9A%84%E4%BD%99%E5%BC%A6%E5%AE%9A%E7%90%86"><span class="nav-number">3.1.</span> <span class="nav-text">修正的余弦定理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#slope-one"><span class="nav-number">3.2.</span> <span class="nav-text">slope one</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%90%8E%E9%9D%A2"><span class="nav-number">4.</span> <span class="nav-text">写在后面</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="duohappy"
+      src="/images/github_blog_myself.jpg">
+  <p class="site-author-name" itemprop="name">duohappy</p>
+  <div class="site-description" itemprop="description">怕什么真理无穷</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">86</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/duohappy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;duohappy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.zhihu.com/people/duohappy" title="https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;duohappy" rel="noopener" target="_blank">知乎</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/zhouww" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;zhouww" rel="noopener" target="_blank">博客园</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhouww.life/2017/05/21/%E7%86%9F%E6%82%89numpy%E5%92%8Cpandas/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/github_blog_myself.jpg">
+      <meta itemprop="name" content="duohappy">
+      <meta itemprop="description" content="怕什么真理无穷">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="duohappy's home">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          熟悉numpy和pandas
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-05-21 15:53:15" itemprop="dateCreated datePublished" datetime="2017-05-21T15:53:15+08:00">2017-05-21</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2017-09-15 13:35:04" itemprop="dateModified" datetime="2017-09-15T13:35:04+08:00">2017-09-15</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>本文参考资料：</p>
+<ul>
+<li>主：<a target="_blank" rel="noopener" href="https://www.gitbook.com/book/wizardforcel/guide-to-data-mining/details">https://www.gitbook.com/book/wizardforcel/guide-to-data-mining/details</a></li>
+<li>辅：《集体智慧编程》</li>
+</ul>
+<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>看了gitbook那本书的第二章和第三章，自己正在复习高等数学、线性代数、概率、统计的知识，所以想用<strong>numpy和pandas</strong>把第二章和第三章的逻辑实现，书中的代码有点复杂。自从有了这个想法后，gitbook那本书上的源码我几乎都没有看过。</p>
+<p>说实话，我看教程很少看别人的源码，当了解问题的逻辑后，我第一时间想到的是<strong>自己来实现</strong>，写完了代码后再看别人的代码，如果实在写不出来，那么才看别人的源码，看完了之后我也会自己重新理解逻辑再重新敲一遍。</p>
+<p>所以，如果你对用<strong>numpy和pandas</strong>把第二章和第三章的逻辑实现这件事有兴趣，可以在自己实现以后，来看看我写的，欢迎批评建议。</p>
+<span id="more"></span>
+<p>本文需要的基础如下：</p>
+<ul>
+<li>较好的Python基础</li>
+<li>numpy和pandas基础<ul>
+<li>帮助文档是最好的老师，numpy和pandas帮助文档写的真不错</li>
+<li>google</li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/">Stack Overflow</a></li>
+</ul>
+</li>
+<li>线性代数基础<ul>
+<li>对应相乘再求和 —&gt; 内积！</li>
+</ul>
+</li>
+<li>阅读<a target="_blank" rel="noopener" href="https://www.gitbook.com/book/wizardforcel/guide-to-data-mining/details">https://www.gitbook.com/book/wizardforcel/guide-to-data-mining/details</a> 前三章</li>
+</ul>
+<h1 id="基于用户的推荐"><a href="#基于用户的推荐" class="headerlink" title="基于用户的推荐"></a>基于用户的推荐</h1><p>基本的事实：两个人的品味如电影品味越相近，那么两个人对相应内容的评价也越相近<br>逻辑：根据两者对同样内容的评价，分析两者的相似程度，给对方进行推荐</p>
+<ul>
+<li>怎么判断相似？<ul>
+<li>曼哈顿距离</li>
+<li>欧氏距离</li>
+<li>皮尔逊系数</li>
+<li>余弦定理</li>
+</ul>
+</li>
+<li>怎么推荐？<ul>
+<li>找到与之最相似的用户，推荐这位用户评价最高的内容</li>
+<li>找到与之比较相似的用户，加权处理</li>
+</ul>
+</li>
+</ul>
+<h2 id="距离"><a href="#距离" class="headerlink" title="距离"></a>距离</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line">__author__ = <span class="string">&#x27;duohappy&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">users = &#123;<span class="string">&quot;Angelica&quot;</span>: &#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">3.5</span>, <span class="string">&quot;Broken Bells&quot;</span>: <span class="number">2.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">4.5</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">1.5</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">2.5</span>, <span class="string">&quot;Vampire Weekend&quot;</span>: <span class="number">2.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Bill&quot;</span>:&#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">2.0</span>, <span class="string">&quot;Broken Bells&quot;</span>: <span class="number">3.5</span>, <span class="string">&quot;Deadmau5&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">2.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">3.5</span>, <span class="string">&quot;Vampire Weekend&quot;</span>: <span class="number">3.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Chan&quot;</span>: &#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Broken Bells&quot;</span>: <span class="number">1.0</span>, <span class="string">&quot;Deadmau5&quot;</span>: <span class="number">1.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">3.0</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">5</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">1.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Dan&quot;</span>: &#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">3.0</span>, <span class="string">&quot;Broken Bells&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Deadmau5&quot;</span>: <span class="number">4.5</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">3.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">4.5</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Vampire Weekend&quot;</span>: <span class="number">2.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Hailey&quot;</span>: &#123;<span class="string">&quot;Broken Bells&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Deadmau5&quot;</span>: <span class="number">1.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Vampire Weekend&quot;</span>: <span class="number">1.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Jordyn&quot;</span>:  &#123;<span class="string">&quot;Broken Bells&quot;</span>: <span class="number">4.5</span>, <span class="string">&quot;Deadmau5&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">4.5</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Vampire Weekend&quot;</span>: <span class="number">4.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Sam&quot;</span>: &#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Broken Bells&quot;</span>: <span class="number">2.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">3.0</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">5.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Veronica&quot;</span>: &#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">3.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">2.5</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">3.0</span>&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">manhattan_pd</span>(<span class="params">user1, user2</span>):</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># nan在sum过程中以0替代</span></span><br><span class="line">    distance = np.<span class="built_in">abs</span>(user1 - user2).<span class="built_in">sum</span>()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> distance</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">topN_pd</span>(<span class="params">user, users_df</span>):</span></span><br><span class="line">    </span><br><span class="line">    users_df = users_df.drop(user.name, axis=<span class="number">1</span>)  <span class="comment"># 注意！users.df.drop() Return new object with labels in requested axis removed.</span></span><br><span class="line">    <span class="comment"># print(users_df)</span></span><br><span class="line">    </span><br><span class="line">    distances = []</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> other_user <span class="keyword">in</span> users_df:</span><br><span class="line">        distance = manhattan_pd(user, users_df[other_user])   <span class="comment"># users_df[other_user] 和 users_df.other_user表达含义不同！</span></span><br><span class="line">        distances.append((other_user, distance))</span><br><span class="line">        </span><br><span class="line">    distances = <span class="built_in">sorted</span>(distances, key=<span class="keyword">lambda</span> x:x[-<span class="number">1</span>])</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> distances</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">recommend_pd</span>(<span class="params">user, users_df</span>):</span></span><br><span class="line">    </span><br><span class="line">    distances = topN_pd(user, users_df)</span><br><span class="line">    </span><br><span class="line">    nearest_user = distances[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="comment"># users_df[nearest_user] 得到距离user最近的用户</span></span><br><span class="line">    <span class="comment"># user.isnull() 得到user没有试过的选择</span></span><br><span class="line">    <span class="comment"># users_df[nearest_user][user.isnull()] 得到user没有试过的选择在nearest_user中的情况</span></span><br><span class="line">    <span class="comment"># users_df[nearest_user][user.isnull()].dropna() 丢弃nearest_user也没有试过的选择，剩下的就可以推荐了</span></span><br><span class="line">    recommendations = users_df[nearest_user][user.isnull()].dropna()</span><br><span class="line">    recommendations = recommendations.sort_values(ascending=<span class="literal">False</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> recommendations</span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># print(manhattan(users[&quot;Angelica&quot;], users[&quot;Bill&quot;]))</span></span><br><span class="line">    <span class="comment"># print(topN(&#x27;Angelica&#x27;, users))</span></span><br><span class="line">    <span class="built_in">print</span>(recommend(<span class="string">&#x27;Bill&#x27;</span>, users))</span><br><span class="line">    </span><br><span class="line">    users_df = pd.DataFrame(users)</span><br><span class="line">    <span class="comment"># print(users_df)</span></span><br><span class="line">    <span class="comment"># manhattan_pd(users_df.Angelica, users_df.Bill)</span></span><br><span class="line">    <span class="comment"># print(topN_pd(users_df.Angelica, users_df))</span></span><br><span class="line">    recommend_pd(users_df.Bill, users_df)</span><br></pre></td></tr></table></figure>
+
+<h2 id="皮尔逊系数"><a href="#皮尔逊系数" class="headerlink" title="皮尔逊系数"></a>皮尔逊系数</h2><p>为什么出现皮尔逊系数？那本书写的很清楚，建议一读</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line">__author__ = <span class="string">&#x27;duohappy&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">users = &#123;<span class="string">&quot;Angelica&quot;</span>: &#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">3.5</span>, <span class="string">&quot;Broken Bells&quot;</span>: <span class="number">2.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">4.5</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">1.5</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">2.5</span>, <span class="string">&quot;Vampire Weekend&quot;</span>: <span class="number">2.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Bill&quot;</span>:&#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">2.0</span>, <span class="string">&quot;Broken Bells&quot;</span>: <span class="number">3.5</span>, <span class="string">&quot;Deadmau5&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">2.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">3.5</span>, <span class="string">&quot;Vampire Weekend&quot;</span>: <span class="number">3.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Chan&quot;</span>: &#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Broken Bells&quot;</span>: <span class="number">1.0</span>, <span class="string">&quot;Deadmau5&quot;</span>: <span class="number">1.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">3.0</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">5</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">1.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Dan&quot;</span>: &#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">3.0</span>, <span class="string">&quot;Broken Bells&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Deadmau5&quot;</span>: <span class="number">4.5</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">3.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">4.5</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Vampire Weekend&quot;</span>: <span class="number">2.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Hailey&quot;</span>: &#123;<span class="string">&quot;Broken Bells&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Deadmau5&quot;</span>: <span class="number">1.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Vampire Weekend&quot;</span>: <span class="number">1.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Jordyn&quot;</span>:  &#123;<span class="string">&quot;Broken Bells&quot;</span>: <span class="number">4.5</span>, <span class="string">&quot;Deadmau5&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">4.5</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Vampire Weekend&quot;</span>: <span class="number">4.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Sam&quot;</span>: &#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Broken Bells&quot;</span>: <span class="number">2.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">3.0</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">5.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Veronica&quot;</span>: &#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">3.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">2.5</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">3.0</span>&#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pearson</span>(<span class="params">user1, user2</span>):</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 贸然地给填充0是不可行的，别人就没有看过这部电影，怎么轻易断定别人的评分是0</span></span><br><span class="line">    <span class="comment"># user1 = user1.fillna(0)</span></span><br><span class="line">    <span class="comment"># user2 = user2.fillna(0)</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># user1.isnull()得到包含True/False的Series</span></span><br><span class="line">    <span class="comment"># user1[user1.isnull()]得到值为NaN的Series</span></span><br><span class="line">    <span class="comment"># user1[user1.isnull()].index得到Series的index</span></span><br><span class="line">    <span class="comment"># list</span></span><br><span class="line">    <span class="comment"># 为了作并集操作，set</span></span><br><span class="line">    user1_nan_labels = <span class="built_in">set</span>(<span class="built_in">list</span>(user1[user1.isnull()].index))</span><br><span class="line">    user2_nan_labels = <span class="built_in">set</span>(<span class="built_in">list</span>(user2[user2.isnull()].index))</span><br><span class="line">    all_nan_labels = user1_nan_labels | user2_nan_labels</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 只用两者都有的内容计算</span></span><br><span class="line">    <span class="comment"># 丢弃所有的NaN</span></span><br><span class="line">    user1 = user1.drop(all_nan_labels)</span><br><span class="line">    user2 = user2.drop(all_nan_labels)</span><br><span class="line">    </span><br><span class="line">    user1_sub_mean = user1 - user1.mean()</span><br><span class="line">    user2_sub_mean = user2 - user2.mean()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 向量的内积</span></span><br><span class="line">    num = (user1_sub_mean).dot(user2_sub_mean)</span><br><span class="line">    <span class="comment"># 向量内积</span></span><br><span class="line">    den = np.sqrt(user1_sub_mean.dot(user1_sub_mean)) * np.sqrt(user2_sub_mean.dot(user2_sub_mean))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> num/den</span><br><span class="line">    </span><br><span class="line">        </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    </span><br><span class="line">    users_df = pd.DataFrame(users)</span><br><span class="line">    </span><br><span class="line">    pearson(users_df.Angelica, users_df.Bill)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># print(users_df.Angelica)</span></span><br><span class="line">    <span class="comment"># print(users_df.Hailey)</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="余弦定理"><a href="#余弦定理" class="headerlink" title="余弦定理"></a>余弦定理</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line">__author__ = <span class="string">&#x27;duohappy&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">users = &#123;<span class="string">&quot;Angelica&quot;</span>: &#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">3.5</span>, <span class="string">&quot;Broken Bells&quot;</span>: <span class="number">2.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">4.5</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">1.5</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">2.5</span>, <span class="string">&quot;Vampire Weekend&quot;</span>: <span class="number">2.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Bill&quot;</span>:&#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">2.0</span>, <span class="string">&quot;Broken Bells&quot;</span>: <span class="number">3.5</span>, <span class="string">&quot;Deadmau5&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">2.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">3.5</span>, <span class="string">&quot;Vampire Weekend&quot;</span>: <span class="number">3.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Chan&quot;</span>: &#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Broken Bells&quot;</span>: <span class="number">1.0</span>, <span class="string">&quot;Deadmau5&quot;</span>: <span class="number">1.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">3.0</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">5</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">1.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Dan&quot;</span>: &#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">3.0</span>, <span class="string">&quot;Broken Bells&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Deadmau5&quot;</span>: <span class="number">4.5</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">3.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">4.5</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Vampire Weekend&quot;</span>: <span class="number">2.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Hailey&quot;</span>: &#123;<span class="string">&quot;Broken Bells&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Deadmau5&quot;</span>: <span class="number">1.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Vampire Weekend&quot;</span>: <span class="number">1.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Jordyn&quot;</span>:  &#123;<span class="string">&quot;Broken Bells&quot;</span>: <span class="number">4.5</span>, <span class="string">&quot;Deadmau5&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">4.5</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Vampire Weekend&quot;</span>: <span class="number">4.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Sam&quot;</span>: &#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Broken Bells&quot;</span>: <span class="number">2.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">3.0</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">5.0</span>&#125;,</span><br><span class="line">         <span class="string">&quot;Veronica&quot;</span>: &#123;<span class="string">&quot;Blues Traveler&quot;</span>: <span class="number">3.0</span>, <span class="string">&quot;Norah Jones&quot;</span>: <span class="number">5.0</span>, <span class="string">&quot;Phoenix&quot;</span>: <span class="number">4.0</span>, <span class="string">&quot;Slightly Stoopid&quot;</span>: <span class="number">2.5</span>, <span class="string">&quot;The Strokes&quot;</span>: <span class="number">3.0</span>&#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cosine</span>(<span class="params">user1, user2</span>):</span></span><br><span class="line">    <span class="comment"># 余弦定理用0代替空值</span></span><br><span class="line">    user1 = user1.fillna(<span class="number">0</span>)</span><br><span class="line">    user2 = user2.fillna(<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    num = user1.dot(user2)</span><br><span class="line">    den = np.sqrt(user1.dot(user1))*np.sqrt(user2.dot(user2))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> num/den</span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    users_df = pd.DataFrame(users)</span><br><span class="line">    </span><br><span class="line">    cosine(users_df.Angelica, users_df.Veronica)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="K最邻近算法"><a href="#K最邻近算法" class="headerlink" title="K最邻近算法"></a>K最邻近算法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line">__author__ = <span class="string">&#x27;duohappy&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> pearson_coefficient <span class="keyword">import</span> pearson</span><br><span class="line">        </span><br><span class="line">users=&#123;<span class="string">&#x27;Lisa Rose&#x27;</span>: &#123;<span class="string">&#x27;Lady in the Water&#x27;</span>: <span class="number">2.5</span>, <span class="string">&#x27;Snakes on a Plane&#x27;</span>: <span class="number">3.5</span>,</span><br><span class="line"> <span class="string">&#x27;Just My Luck&#x27;</span>: <span class="number">3.0</span>, <span class="string">&#x27;Superman Returns&#x27;</span>: <span class="number">3.5</span>, <span class="string">&#x27;You, Me and Dupree&#x27;</span>: <span class="number">2.5</span>, </span><br><span class="line"> <span class="string">&#x27;The Night Listener&#x27;</span>: <span class="number">3.0</span>&#125;,</span><br><span class="line"><span class="string">&#x27;Gene Seymour&#x27;</span>: &#123;<span class="string">&#x27;Lady in the Water&#x27;</span>: <span class="number">3.0</span>, <span class="string">&#x27;Snakes on a Plane&#x27;</span>: <span class="number">3.5</span>, </span><br><span class="line"> <span class="string">&#x27;Just My Luck&#x27;</span>: <span class="number">1.5</span>, <span class="string">&#x27;Superman Returns&#x27;</span>: <span class="number">5.0</span>, <span class="string">&#x27;The Night Listener&#x27;</span>: <span class="number">3.0</span>, </span><br><span class="line"> <span class="string">&#x27;You, Me and Dupree&#x27;</span>: <span class="number">3.5</span>&#125;, </span><br><span class="line"><span class="string">&#x27;Michael Phillips&#x27;</span>: &#123;<span class="string">&#x27;Lady in the Water&#x27;</span>: <span class="number">2.5</span>, <span class="string">&#x27;Snakes on a Plane&#x27;</span>: <span class="number">3.0</span>,</span><br><span class="line"> <span class="string">&#x27;Superman Returns&#x27;</span>: <span class="number">3.5</span>, <span class="string">&#x27;The Night Listener&#x27;</span>: <span class="number">4.0</span>&#125;,</span><br><span class="line"><span class="string">&#x27;Claudia Puig&#x27;</span>: &#123;<span class="string">&#x27;Snakes on a Plane&#x27;</span>: <span class="number">3.5</span>, <span class="string">&#x27;Just My Luck&#x27;</span>: <span class="number">3.0</span>,</span><br><span class="line"> <span class="string">&#x27;The Night Listener&#x27;</span>: <span class="number">4.5</span>, <span class="string">&#x27;Superman Returns&#x27;</span>: <span class="number">4.0</span>, </span><br><span class="line"> <span class="string">&#x27;You, Me and Dupree&#x27;</span>: <span class="number">2.5</span>&#125;,</span><br><span class="line"><span class="string">&#x27;Mick LaSalle&#x27;</span>: &#123;<span class="string">&#x27;Lady in the Water&#x27;</span>: <span class="number">3.0</span>, <span class="string">&#x27;Snakes on a Plane&#x27;</span>: <span class="number">4.0</span>, </span><br><span class="line"> <span class="string">&#x27;Just My Luck&#x27;</span>: <span class="number">2.0</span>, <span class="string">&#x27;Superman Returns&#x27;</span>: <span class="number">3.0</span>, <span class="string">&#x27;The Night Listener&#x27;</span>: <span class="number">3.0</span>,</span><br><span class="line"> <span class="string">&#x27;You, Me and Dupree&#x27;</span>: <span class="number">2.0</span>&#125;, </span><br><span class="line"><span class="string">&#x27;Jack Matthews&#x27;</span>: &#123;<span class="string">&#x27;Lady in the Water&#x27;</span>: <span class="number">3.0</span>, <span class="string">&#x27;Snakes on a Plane&#x27;</span>: <span class="number">4.0</span>,</span><br><span class="line"> <span class="string">&#x27;The Night Listener&#x27;</span>: <span class="number">3.0</span>, <span class="string">&#x27;Superman Returns&#x27;</span>: <span class="number">5.0</span>, <span class="string">&#x27;You, Me and Dupree&#x27;</span>: <span class="number">3.5</span>&#125;,</span><br><span class="line"><span class="string">&#x27;Toby&#x27;</span>: &#123;<span class="string">&#x27;Snakes on a Plane&#x27;</span>:<span class="number">4.5</span>,<span class="string">&#x27;You, Me and Dupree&#x27;</span>:<span class="number">1.0</span>,<span class="string">&#x27;Superman Returns&#x27;</span>:<span class="number">4.0</span>&#125;&#125;</span><br><span class="line">        </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">topN</span>(<span class="params">user, users_df</span>):</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 和其他用户比较</span></span><br><span class="line">    <span class="comment"># 丢弃掉user.name这一列</span></span><br><span class="line">    users_df = users_df.drop(user.name, axis=<span class="number">1</span>)</span><br><span class="line">    <span class="comment"># print(users_df) # 函数内重新定义了一个变量users_df，而在外部的users_df并没有改变，users_df.drop()方法并不会改变本身的users_df</span></span><br><span class="line">    </span><br><span class="line">    similarity = []  <span class="comment"># 相似度</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> other_user <span class="keyword">in</span> users_df:</span><br><span class="line">        positive_sim = pearson(users_df[other_user], user)  <span class="comment"># 其他人和user的皮尔逊系数</span></span><br><span class="line">        <span class="keyword">if</span> positive_sim &gt; <span class="number">0</span>: <span class="comment"># 只保留正相关系数</span></span><br><span class="line">            similarity.append((other_user, positive_sim))</span><br><span class="line">        </span><br><span class="line">    similarity = <span class="built_in">sorted</span>(similarity, key=<span class="keyword">lambda</span> x: x[-<span class="number">1</span>], reverse= <span class="literal">True</span>)  <span class="comment"># 排序</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(similarity)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> similarity</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">recommend</span>(<span class="params">user, users_df</span>):</span></span><br><span class="line">    sim = topN(user, users_df)  <span class="comment"># 得到相似度</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># sim = [sim[0]]</span></span><br><span class="line">    all_choice = []  <span class="comment"># 所有的选择</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> sim:</span><br><span class="line">        all_choice.extend(<span class="built_in">list</span>(users_df[item[<span class="number">0</span>]].index))  <span class="comment"># 得到其他人的所有选择</span></span><br><span class="line">    </span><br><span class="line">    available_choice = <span class="built_in">set</span>(all_choice) - <span class="built_in">set</span>(<span class="built_in">list</span>(user.dropna().index))  <span class="comment"># 得到自己没有做过的选择，注意一定要dropna</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(available_choice)</span><br><span class="line">    </span><br><span class="line">    recom = []  <span class="comment"># 推荐</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 每一个没有做过的选择</span></span><br><span class="line">    <span class="keyword">for</span> choice <span class="keyword">in</span> available_choice: </span><br><span class="line">        sum_score = <span class="number">0</span>  <span class="comment"># 总的评分</span></span><br><span class="line">        sum_sim = <span class="number">0</span>  <span class="comment"># 总的相似度</span></span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> sim: 　<span class="comment"># 每一个其他用户</span></span><br><span class="line">            score = users_df.loc[choice, item[<span class="number">0</span>]] <span class="comment"># 其他用户的选择 评分</span></span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> np.isnan(score):  <span class="comment"># 如果这个评分不是nan的话</span></span><br><span class="line">                sum_score += item[-<span class="number">1</span>] * users_df.loc[choice, item[<span class="number">0</span>]]  <span class="comment"># 计算总分</span></span><br><span class="line">                sum_sim += item[-<span class="number">1</span>]  <span class="comment"># 总的相似度</span></span><br><span class="line"></span><br><span class="line">        recom.append((choice, sum_score/sum_sim))  <span class="comment"># sum_score/sum_sim</span></span><br><span class="line">        </span><br><span class="line">    recom = <span class="built_in">sorted</span>(recom, key=<span class="keyword">lambda</span> x: x[-<span class="number">1</span>], reverse=<span class="literal">True</span>)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> recom</span><br><span class="line">            </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    users_df = pd.DataFrame(users)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># topN(users_df.Sam, users_df)</span></span><br><span class="line">    </span><br><span class="line">    recommend(users_df.Toby, users_df)</span><br></pre></td></tr></table></figure>
+
+<h1 id="基于物品的推荐"><a href="#基于物品的推荐" class="headerlink" title="基于物品的推荐"></a>基于物品的推荐</h1><p>基本事实：两个物品很相近，那么同一用户对这两个物品的评价很可能也相近</p>
+<h2 id="修正的余弦定理"><a href="#修正的余弦定理" class="headerlink" title="修正的余弦定理"></a>修正的余弦定理</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line">__author__ = <span class="string">&#x27;duohappy&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">users = &#123;<span class="string">&quot;David&quot;</span>: &#123;<span class="string">&quot;Imagine Dragons&quot;</span>: <span class="number">3</span>, <span class="string">&quot;Daft Punk&quot;</span>: <span class="number">5</span>,</span><br><span class="line">                    <span class="string">&quot;Lorde&quot;</span>: <span class="number">4</span>, <span class="string">&quot;Fall Out Boy&quot;</span>: <span class="number">1</span>&#125;,</span><br><span class="line">          <span class="string">&quot;Matt&quot;</span>: &#123;<span class="string">&quot;Imagine Dragons&quot;</span>: <span class="number">3</span>, <span class="string">&quot;Daft Punk&quot;</span>: <span class="number">4</span>,</span><br><span class="line">                   <span class="string">&quot;Lorde&quot;</span>: <span class="number">4</span>, <span class="string">&quot;Fall Out Boy&quot;</span>: <span class="number">1</span>&#125;,</span><br><span class="line">          <span class="string">&quot;Ben&quot;</span>: &#123;<span class="string">&quot;Kacey Musgraves&quot;</span>: <span class="number">4</span>, <span class="string">&quot;Imagine Dragons&quot;</span>: <span class="number">3</span>,</span><br><span class="line">                  <span class="string">&quot;Lorde&quot;</span>: <span class="number">3</span>, <span class="string">&quot;Fall Out Boy&quot;</span>: <span class="number">1</span>&#125;,</span><br><span class="line">          <span class="string">&quot;Chris&quot;</span>: &#123;<span class="string">&quot;Kacey Musgraves&quot;</span>: <span class="number">4</span>, <span class="string">&quot;Imagine Dragons&quot;</span>: <span class="number">4</span>,</span><br><span class="line">                    <span class="string">&quot;Daft Punk&quot;</span>: <span class="number">4</span>, <span class="string">&quot;Lorde&quot;</span>: <span class="number">3</span>, <span class="string">&quot;Fall Out Boy&quot;</span>: <span class="number">1</span>&#125;,</span><br><span class="line">          <span class="string">&quot;Tori&quot;</span>: &#123;<span class="string">&quot;Kacey Musgraves&quot;</span>: <span class="number">5</span>, <span class="string">&quot;Imagine Dragons&quot;</span>: <span class="number">4</span>,</span><br><span class="line">                   <span class="string">&quot;Daft Punk&quot;</span>: <span class="number">5</span>, <span class="string">&quot;Fall Out Boy&quot;</span>: <span class="number">3</span>&#125;&#125;</span><br><span class="line">                   </span><br><span class="line">               </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cosine</span>(<span class="params">item1, item2, users_df</span>):</span></span><br><span class="line">    <span class="comment"># item2.notnull() item2不为nan的位置</span></span><br><span class="line">    <span class="comment"># item1[item2.notnull()] 取出item1中对应的value</span></span><br><span class="line">    <span class="comment"># item1[item2.notnull()].dropna() 丢弃item1中特有的nan</span></span><br><span class="line">    <span class="comment"># item1 = item1[item2.notnull()].dropna()，这个种写法会影响下面一条语句</span></span><br><span class="line">    <span class="comment"># item1_dropna = item1[item2.notnull()].dropna()</span></span><br><span class="line">    <span class="comment"># item2_dropna = item2[item1.notnull()].dropna()</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 用&amp;而不是and</span></span><br><span class="line">    <span class="comment"># 如果item1和item2中对应位置有一个nan，那么得到的bool array对应位置就是False</span></span><br><span class="line">    all_not_nan = item1.notnull().values &amp; item2.notnull().values</span><br><span class="line">    </span><br><span class="line">    item1 = item1[all_not_nan]</span><br><span class="line">    item2 = item2[all_not_nan]</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="comment"># item1.index和item2.index包含同样的内容</span></span><br><span class="line">    <span class="comment"># 必须要dropna后计算mean</span></span><br><span class="line">    data = [users_df[name].dropna().mean() <span class="keyword">for</span> name <span class="keyword">in</span> item1.index]</span><br><span class="line">    <span class="comment"># 组成一个对应的Series</span></span><br><span class="line">    item1_mean = pd.Series(data, item1.index)</span><br><span class="line">    item2_mean = pd.Series(data, item2.index)</span><br><span class="line">    </span><br><span class="line">    item1_sub_mean = item1 - item1_mean</span><br><span class="line">    item2_sub_mean = item2 - item2_mean</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># print(item1_sub_mean)</span></span><br><span class="line">    <span class="comment"># print(item2_sub_mean)</span></span><br><span class="line">    </span><br><span class="line">    num = item1_sub_mean.dot(item2_sub_mean)</span><br><span class="line">    den = np.sqrt(item1_sub_mean.dot(item1_sub_mean)) * np.sqrt(item2_sub_mean.dot(item2_sub_mean))</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># print(num / den)</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> num/den</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line"><span class="comment"># 得到修正的余弦相似度矩阵</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cosineMatrix</span>(<span class="params">users_df</span>):</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 构造这个矩阵的大致样子</span></span><br><span class="line">    cosine_matrix = pd.DataFrame(np.zeros([<span class="number">5</span>, <span class="number">5</span>]), index=users_df.index, columns=users_df.index)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 定义一个索引i</span></span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 遍历行列，计算元素具体值</span></span><br><span class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> users_df.index:</span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">        <span class="comment"># 为了避免重复计算，使用切片</span></span><br><span class="line">        <span class="keyword">for</span> column <span class="keyword">in</span> users_df.index[:i]:</span><br><span class="line">            <span class="keyword">if</span> row == column:</span><br><span class="line">                cosine_matrix.loc[row, column] = <span class="number">1</span></span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            cosine_matrix.loc[row, column] = cosine(users_df.loc[row], users_df.loc[column], users_df)</span><br><span class="line">            cosine_matrix.loc[column, row] = cosine_matrix.loc[row, column]</span><br><span class="line">            </span><br><span class="line">    cosine_matrix.to_csv(<span class="string">&#x27;./tmp.csv&#x27;</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> cosine_matrix</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">predict_score</span>(<span class="params">user, item, users_df</span>):</span></span><br><span class="line">    MAX = <span class="number">5</span></span><br><span class="line">    MIN = <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    all_nan = user.notnull()</span><br><span class="line">    </span><br><span class="line">    user = user[all_nan]</span><br><span class="line">    cosine_item = cosineMatrix(users_df)[item.name][all_nan]</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># print(user)</span></span><br><span class="line">    <span class="comment"># print(cosine_item)</span></span><br><span class="line">    </span><br><span class="line">    user = (<span class="number">2</span>*(user - MIN) - (MAX - MIN))/(MAX - MIN)</span><br><span class="line">    <span class="comment"># print(user)</span></span><br><span class="line">    </span><br><span class="line">    num = user.dot(cosine_item)</span><br><span class="line">    den = np.<span class="built_in">abs</span>(cosine_item).<span class="built_in">sum</span>()</span><br><span class="line">    </span><br><span class="line">    nr = num/den</span><br><span class="line">    r = <span class="number">1</span>/<span class="number">2</span>*((nr + <span class="number">1</span>) * (MAX - MIN)) + MIN</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> nr, r</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    users_df = pd.DataFrame(users)</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(users_df)</span><br><span class="line">    <span class="comment"># print(users_df.loc[&#x27;Daft Punk&#x27;], users_df.loc[&#x27;Fall Out Boy&#x27;])</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># DataFrame取一行使用loc</span></span><br><span class="line">    <span class="comment"># cosine(users_df.loc[&#x27;Kacey Musgraves&#x27;], users_df.loc[&#x27;Imagine Dragons&#x27;], users_df)</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># cosineMatrix(users_df)</span></span><br><span class="line">    predict_score(users_df.David, users_df.loc[<span class="string">&#x27;Kacey Musgraves&#x27;</span>], users_df)</span><br></pre></td></tr></table></figure>
+
+<h2 id="slope-one"><a href="#slope-one" class="headerlink" title="slope one"></a>slope one</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line">__author__ = <span class="string">&#x27;duohappy&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">users = &#123;<span class="string">&quot;Amy&quot;</span>: &#123;<span class="string">&quot;Taylor Swift&quot;</span>: <span class="number">4</span>, <span class="string">&quot;PSY&quot;</span>: <span class="number">3</span>, <span class="string">&quot;Whitney Houston&quot;</span>: <span class="number">4</span>&#125;,</span><br><span class="line">          <span class="string">&quot;Ben&quot;</span>: &#123;<span class="string">&quot;Taylor Swift&quot;</span>: <span class="number">5</span>, <span class="string">&quot;PSY&quot;</span>: <span class="number">2</span>&#125;,</span><br><span class="line">          <span class="string">&quot;Clara&quot;</span>: &#123;<span class="string">&quot;PSY&quot;</span>: <span class="number">3.5</span>, <span class="string">&quot;Whitney Houston&quot;</span>: <span class="number">4</span>&#125;,</span><br><span class="line">          <span class="string">&quot;Daisy&quot;</span>: &#123;<span class="string">&quot;Taylor Swift&quot;</span>: <span class="number">5</span>, <span class="string">&quot;Whitney Houston&quot;</span>: <span class="number">3</span>&#125;&#125;</span><br><span class="line">          </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">slope_one_func</span>(<span class="params">item1, item2</span>):</span></span><br><span class="line"></span><br><span class="line">    all_not_nan = item1.notnull() &amp; item2.notnull()</span><br><span class="line">    </span><br><span class="line">    item1 = item1[all_not_nan]</span><br><span class="line">    item2 = item2[all_not_nan]</span><br><span class="line">    </span><br><span class="line">    card_s = <span class="built_in">len</span>(item1)</span><br><span class="line">    </span><br><span class="line">    dev = ((item1 - item2) / card_s).<span class="built_in">sum</span>()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> dev</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">slop_one_matrix</span>(<span class="params">users_df</span>):</span></span><br><span class="line">    </span><br><span class="line">    matrix = pd.DataFrame(np.zeros((<span class="number">3</span>, <span class="number">3</span>)), index=users_df.index, columns=users_df.index)</span><br><span class="line">    </span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> row <span class="keyword">in</span> users_df.index:</span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> column <span class="keyword">in</span> users_df.index[:i]:</span><br><span class="line">            <span class="keyword">if</span> row == column:</span><br><span class="line">                matrix.loc[row, column] = <span class="number">0</span></span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            matrix.loc[row, column] = slope_one_func(users_df.loc[row], users_df.loc[column])</span><br><span class="line">            matrix.loc[column, row] = -matrix.loc[row, column]</span><br><span class="line">            </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> matrix</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    </span><br><span class="line">    users_df = pd.DataFrame(users)</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(users_df)</span><br><span class="line">    <span class="comment"># slope_one_func(users_df.loc[&#x27;PSY&#x27;], users_df.loc[&#x27;Taylor Swift&#x27;])</span></span><br><span class="line">    </span><br><span class="line">    slop_one_matrix(users_df)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="写在后面"><a href="#写在后面" class="headerlink" title="写在后面"></a>写在后面</h1><p>本文仅仅为了熟悉numpy和pandas用法，至于推荐系统嘛，我还没有学太深，先不写。太基础的内容，我不会写，因为网上太多资料了。我会坚持写点<strong>符合自己个性的文章</strong>。</p>
+<p><strong>越来越发现业务知识的重要性，不然分析来分析去，分析出一堆数，也不知道分析的意义。定性分析先行，定量分析后行。</strong></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/pandas/" rel="tag"># pandas</a>
+              <a href="/tags/numpy/" rel="tag"># numpy</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/05/21/%E9%AB%98%E8%80%83%E5%90%A7%E5%88%86%E6%9E%90/" rel="prev" title="高考吧分析">
+                  <i class="fa fa-chevron-left"></i> 高考吧分析
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/05/21/%E7%AE%80%E5%8D%95%E7%BD%91%E7%AB%99%E7%88%AC%E8%99%AB%E7%9A%84%E6%89%80%E6%9C%89%E6%8A%80%E8%83%BD/" rel="next" title="简单网站爬虫的所有技能">
+                  简单网站爬虫的所有技能 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">duohappy</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

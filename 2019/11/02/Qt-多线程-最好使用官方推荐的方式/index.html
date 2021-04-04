@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouww.life","root":"/","images":"/images","scheme":"Pisces","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
+  </script>
+<meta name="description" content="主线程（GUI线程）可重入和线程安全 1234567891011If a function is not marked as thread-safe or reentrant, it should not be used from different threads. If a class is not marked as thread-safe or reentrant then a speci">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Qt-多线程-最好使用官方推荐的方式">
+<meta property="og:url" content="http://zhouww.life/2019/11/02/Qt-%E5%A4%9A%E7%BA%BF%E7%A8%8B-%E6%9C%80%E5%A5%BD%E4%BD%BF%E7%94%A8%E5%AE%98%E6%96%B9%E6%8E%A8%E8%8D%90%E7%9A%84%E6%96%B9%E5%BC%8F/index.html">
+<meta property="og:site_name" content="duohappy&#39;s home">
+<meta property="og:description" content="主线程（GUI线程）可重入和线程安全 1234567891011If a function is not marked as thread-safe or reentrant, it should not be used from different threads. If a class is not marked as thread-safe or reentrant then a speci">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-11-02T06:09:10.000Z">
+<meta property="article:modified_time" content="2021-04-03T07:20:47.271Z">
+<meta property="article:author" content="duohappy">
+<meta property="article:tag" content="Qt">
+<meta property="article:tag" content="多线程">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://zhouww.life/2019/11/02/Qt-%E5%A4%9A%E7%BA%BF%E7%A8%8B-%E6%9C%80%E5%A5%BD%E4%BD%BF%E7%94%A8%E5%AE%98%E6%96%B9%E6%8E%A8%E8%8D%90%E7%9A%84%E6%96%B9%E5%BC%8F/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>Qt-多线程-最好使用官方推荐的方式 | duohappy's home</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">duohappy's home</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">hungry and foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BB%E7%BA%BF%E7%A8%8B%EF%BC%88GUI%E7%BA%BF%E7%A8%8B%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">主线程（GUI线程）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%BF%E7%A8%8B%EF%BC%8C%E7%BA%BF%E7%A8%8B%E5%AF%B9%E8%B1%A1%EF%BC%8C%E5%AF%B9%E8%B1%A1"><span class="nav-number">2.</span> <span class="nav-text">线程，线程对象，对象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E8%BE%83%E5%A5%BD%E7%9A%84%E5%AE%9E%E8%B7%B5"><span class="nav-number">3.</span> <span class="nav-text">多线程较好的实践</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="duohappy"
+      src="/images/github_blog_myself.jpg">
+  <p class="site-author-name" itemprop="name">duohappy</p>
+  <div class="site-description" itemprop="description">怕什么真理无穷</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">86</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/duohappy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;duohappy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.zhihu.com/people/duohappy" title="https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;duohappy" rel="noopener" target="_blank">知乎</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/zhouww" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;zhouww" rel="noopener" target="_blank">博客园</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhouww.life/2019/11/02/Qt-%E5%A4%9A%E7%BA%BF%E7%A8%8B-%E6%9C%80%E5%A5%BD%E4%BD%BF%E7%94%A8%E5%AE%98%E6%96%B9%E6%8E%A8%E8%8D%90%E7%9A%84%E6%96%B9%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/github_blog_myself.jpg">
+      <meta itemprop="name" content="duohappy">
+      <meta itemprop="description" content="怕什么真理无穷">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="duohappy's home">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Qt-多线程-最好使用官方推荐的方式
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-11-02 14:09:10" itemprop="dateCreated datePublished" datetime="2019-11-02T14:09:10+08:00">2019-11-02</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-04-03 15:20:47" itemprop="dateModified" datetime="2021-04-03T15:20:47+08:00">2021-04-03</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="主线程（GUI线程）"><a href="#主线程（GUI线程）" class="headerlink" title="主线程（GUI线程）"></a>主线程（GUI线程）</h1><p>可重入和线程安全</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">If a function is not marked as thread-safe or reentrant, it should not be used from different threads. If a class is not marked as thread-safe or reentrant then a specific instance of that class should not be accessed from different threads.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 可重入</span><br><span class="line">// 比如一个类，在每个线程中创建一个实例进行使用</span><br><span class="line"></span><br><span class="line">// 线程安全</span><br><span class="line">// 比如一个类，在每个线程中使用同一个实例</span><br><span class="line"></span><br><span class="line">// 没有标明可重入和线程安全</span><br><span class="line">// 比如一个类，就在一个线程中使用，不要多个线程创建多个实例</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+
+<h1 id="线程，线程对象，对象"><a href="#线程，线程对象，对象" class="headerlink" title="线程，线程对象，对象"></a>线程，线程对象，对象</h1><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;QCoreApplication&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;QThread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;QDebug&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 每个对象都有一个归属的线程，依附在固定的线程上运行</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TestThread</span> :</span> <span class="keyword">public</span> QThread</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    QObject obj; <span class="comment">// 在主线程</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="built_in">qDebug</span>() &lt;&lt; <span class="string">&quot;in TestThread run &quot;</span> &lt;&lt; QThread::<span class="built_in">currentThread</span>();</span><br><span class="line">        QObject <span class="keyword">obj_t</span>; <span class="comment">// run函数内，就是进入了线程内部</span></span><br><span class="line">        <span class="comment">// obj_t 依附于子线程</span></span><br><span class="line"></span><br><span class="line">        <span class="built_in">qDebug</span>() &lt;&lt; <span class="string">&quot;not in run &quot;</span> &lt;&lt; obj.<span class="built_in">thread</span>();</span><br><span class="line">        <span class="built_in">qDebug</span>() &lt;&lt; <span class="string">&quot;in run &quot;</span> &lt;&lt; <span class="keyword">obj_t</span>.<span class="built_in">thread</span>();</span><br><span class="line">        <span class="built_in">qDebug</span>() &lt;&lt; <span class="string">&quot;in run this &quot;</span> &lt;&lt; <span class="keyword">this</span>-&gt;<span class="built_in">thread</span>();</span><br><span class="line">        <span class="comment">// this代表线程对象的指针，线程对象在主线程上构建，所以依附于主线程</span></span><br><span class="line">        <span class="comment">// exec(); // 如果要开启子线程事件循环</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">QCoreApplication <span class="title">a</span><span class="params">(argc, argv)</span></span>;</span><br><span class="line"></span><br><span class="line">    TestThread tt; <span class="comment">// 线程对象，用于管理线程，并不是线程</span></span><br><span class="line">    tt.<span class="built_in">start</span>();    <span class="comment">// 开启线程</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">qDebug</span>() &lt;&lt; <span class="string">&quot;in main &quot;</span> &lt;&lt; tt.<span class="built_in">thread</span>(); <span class="comment">// 线程对象所在的线程是主线程</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> a.<span class="built_in">exec</span>(); <span class="comment">// 主线程事件循环</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">in TestThread run QThread(0x2802d4f8e0)</span></span><br><span class="line"><span class="comment">in main QThread(0x1becf00ae20)</span></span><br><span class="line"><span class="comment">not in run QThread(0x1becf00ae20)</span></span><br><span class="line"><span class="comment">in run QThread(0x2802d4f8e0)</span></span><br><span class="line"><span class="comment">in run this QThread(0x1becf00ae20)</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="多线程较好的实践"><a href="#多线程较好的实践" class="headerlink" title="多线程较好的实践"></a>多线程较好的实践</h1><blockquote>
+<p>参考Qt帮助文档</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> **stackoverflow** </span><br><span class="line"></span><br><span class="line">The way the QThread lifecycle works is like this:</span><br><span class="line"></span><br><span class="line">1. You call QThread::start().</span><br><span class="line"></span><br><span class="line">2. At this point, isRunning() should start returning true.</span><br><span class="line">3. The thread internals start. They emit the started() signal.</span><br><span class="line">4. The thread internals call run().</span><br><span class="line">5. Unless you override this in a subclass, run() calls exec().</span><br><span class="line">6. exec() enters an event loop and stays there until quit() or exit() is called.</span><br><span class="line">7. exec() and run() return to the internals.</span><br><span class="line">8. At this point, isFinished() should start returning true and isRunning() false.</span><br><span class="line">9. The internals emit the finished() signal.</span><br><span class="line">10. The internals do some final cleanups.</span><br><span class="line">11. The thread terminates for real.</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Worker</span> :</span> <span class="keyword">public</span> QObject</span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> slots:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">doWork</span><span class="params">(<span class="keyword">const</span> QString &amp;parameter)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        QString result;</span><br><span class="line">        <span class="comment">/* ... here is the expensive or blocking operation ... */</span></span><br><span class="line">        <span class="function">emit <span class="title">resultReady</span><span class="params">(result)</span></span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">signals:</span><br><span class="line">    <span class="comment">// 工作完成后，发射信号</span></span><br><span class="line">    <span class="comment">// 并且把处理的结果作为参数传出</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">resultReady</span><span class="params">(<span class="keyword">const</span> QString &amp;result)</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Controller</span> :</span> <span class="keyword">public</span> QObject</span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line">    QThread workerThread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Controller</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        Worker *worker = <span class="keyword">new</span> Worker;</span><br><span class="line">        worker-&gt;<span class="built_in">moveToThread</span>(&amp;workerThread); <span class="comment">// 改变work的依附线程</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// workerThread 结束后，worker被Controller所在线程接管</span></span><br><span class="line">        <span class="comment">// workerThread发射finished信号是在workerThread所在线程，而不是在run中</span></span><br><span class="line">        <span class="comment">// workerThread和worker在同一线程</span></span><br><span class="line">        <span class="comment">// 连接是Qt::DirectConnection</span></span><br><span class="line">        <span class="built_in">connect</span>(&amp;workerThread, &amp;QThread::finished, worker, &amp;QObject::deleteLater);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Qt::QueuedConnection</span></span><br><span class="line">        <span class="built_in">connect</span>(<span class="keyword">this</span>, &amp;Controller::operate, worker, &amp;Worker::doWork);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Qt::QueuedConnection</span></span><br><span class="line">        <span class="built_in">connect</span>(worker, &amp;Worker::resultReady, <span class="keyword">this</span>, &amp;Controller::handleResults);</span><br><span class="line">        workerThread.<span class="built_in">start</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    ~<span class="built_in">Controller</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        workerThread.<span class="built_in">quit</span>();</span><br><span class="line">        workerThread.<span class="built_in">wait</span>();</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">public</span> slots:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">handleResults</span><span class="params">(<span class="keyword">const</span> QString &amp;)</span></span>;</span><br><span class="line">signals:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">operate</span><span class="params">(<span class="keyword">const</span> QString &amp;)</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Qt/" rel="tag"># Qt</a>
+              <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag"># 多线程</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/10/06/Qt-%E6%B3%A8%E6%84%8F%E9%9A%90%E5%BC%8F%E5%85%B1%E4%BA%AB%E6%9C%BA%E5%88%B6/" rel="prev" title="Qt-注意隐式共享机制">
+                  <i class="fa fa-chevron-left"></i> Qt-注意隐式共享机制
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/05/01/%E6%B5%B7%E5%BA%B7%E5%A8%81%E8%A7%86%E6%91%84%E5%83%8F%E6%9C%BASDK%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="next" title="海康威视摄像机SDK的使用">
+                  海康威视摄像机SDK的使用 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">duohappy</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

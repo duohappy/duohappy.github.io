@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouww.life","root":"/","images":"/images","scheme":"Pisces","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
+  </script>
+<meta name="description" content="爬虫过程概述高考吧是一个大型贴吧，关注人数2406811，帖子总数200多万，花了5天时间爬取所有帖子的链接、标题、回复数、发帖时间，发帖用户和用户等级，总计2016964条记录。 对爬取的过程稍作说明：  爬取链接数：2417386 去重后的链接数：2026735 爬取成功的链接数：2016964 被隐藏或删除的链接数：9771（如http:&#x2F;&#x2F;tieba.baidu.com&#x2F;p&#x2F;4858811">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高考吧分析">
+<meta property="og:url" content="http://zhouww.life/2017/05/21/%E9%AB%98%E8%80%83%E5%90%A7%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="duohappy&#39;s home">
+<meta property="og:description" content="爬虫过程概述高考吧是一个大型贴吧，关注人数2406811，帖子总数200多万，花了5天时间爬取所有帖子的链接、标题、回复数、发帖时间，发帖用户和用户等级，总计2016964条记录。 对爬取的过程稍作说明：  爬取链接数：2417386 去重后的链接数：2026735 爬取成功的链接数：2016964 被隐藏或删除的链接数：9771（如http:&#x2F;&#x2F;tieba.baidu.com&#x2F;p&#x2F;4858811">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-94eda06c1dcbdd91.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-0df75b4bce97b982.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-5abd14b63fd970fb.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-797f646385e5baf1.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-5aea1dd988e5e238.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-e6589733cf29b478.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-975d499966edb443.jpg">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-a4ed17ac4de85236.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-1a3e1233e58bf6f2.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-0f76615cc6f6d879.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-d82daf36d8a9a87f.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-81f4d2292d85d073.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-eeb17c7c6b0b61b7.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-8269d3b635988f89.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-cf2b3955059dd76a.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-fe2278c69001ca48.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-78b278f57eb18745.jpg">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-8685691b1132e0dd.jpeg">
+<meta property="article:published_time" content="2017-05-21T06:29:47.000Z">
+<meta property="article:modified_time" content="2021-04-03T10:47:55.610Z">
+<meta property="article:author" content="duohappy">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="PowerBI">
+<meta property="article:tag" content="数据可视化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-94eda06c1dcbdd91.png">
+
+
+<link rel="canonical" href="http://zhouww.life/2017/05/21/%E9%AB%98%E8%80%83%E5%90%A7%E5%88%86%E6%9E%90/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>高考吧分析 | duohappy's home</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">duohappy's home</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">hungry and foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%88%AC%E8%99%AB%E8%BF%87%E7%A8%8B%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">爬虫过程概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B4%B4%E5%90%A7%E6%A6%82%E5%86%B5"><span class="nav-number">2.</span> <span class="nav-text">贴吧概况</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B9%B4%E6%9C%88%E5%91%A8%E6%97%B6%E5%8F%91%E5%B8%96%E9%87%8F"><span class="nav-number">3.</span> <span class="nav-text">年月周时发帖量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B4%E5%8F%91%E5%B8%96%E9%87%8F"><span class="nav-number">3.1.</span> <span class="nav-text">年发帖量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%88%E5%8F%91%E5%B8%96%E9%87%8F"><span class="nav-number">3.2.</span> <span class="nav-text">月发帖量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%91%A8%E5%8F%91%E5%B8%96%E9%87%8F"><span class="nav-number">3.3.</span> <span class="nav-text">周发帖量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%B6%E5%8F%91%E5%B8%96%E9%87%8F"><span class="nav-number">3.4.</span> <span class="nav-text">时发帖量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E7%AD%89%E7%BA%A7%E5%88%86%E5%B8%83"><span class="nav-number">4.</span> <span class="nav-text">用户等级分布</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%81%E5%A4%A7%E7%83%AD%E5%B8%96"><span class="nav-number">5.</span> <span class="nav-text">十大热帖</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2013%E5%B9%B4%E5%8D%81%E5%A4%A7%E7%83%AD%E5%B8%96"><span class="nav-number">5.1.</span> <span class="nav-text">2013年十大热帖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2016%E5%B9%B4%E5%8D%81%E5%A4%A7%E7%83%AD%E5%B8%96"><span class="nav-number">5.2.</span> <span class="nav-text">2016年十大热帖</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%81%E5%A4%A7%E6%B4%BB%E8%B7%83%E7%94%A8%E6%88%B7"><span class="nav-number">6.</span> <span class="nav-text">十大活跃用户</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2013%E5%B9%B4%E5%8D%81%E5%A4%A7%E6%B4%BB%E8%B7%83%E7%94%A8%E6%88%B7"><span class="nav-number">6.1.</span> <span class="nav-text">2013年十大活跃用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2016%E5%B9%B4%E5%8D%81%E5%A4%A7%E6%B4%BB%E8%B7%83%E7%94%A8%E6%88%B7"><span class="nav-number">6.2.</span> <span class="nav-text">2016年十大活跃用户</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%902013%E5%B9%B4%E5%8F%91%E5%B8%96%E6%83%85%E5%86%B5"><span class="nav-number">7.</span> <span class="nav-text">深入分析2013年发帖情况</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B4%B4%E5%90%A7%E5%85%B3%E9%94%AE%E8%AF%8D"><span class="nav-number">8.</span> <span class="nav-text">贴吧关键词</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">9.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8A%82%E9%80%89"><span class="nav-number">9.1.</span> <span class="nav-text">节选</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="duohappy"
+      src="/images/github_blog_myself.jpg">
+  <p class="site-author-name" itemprop="name">duohappy</p>
+  <div class="site-description" itemprop="description">怕什么真理无穷</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">86</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/duohappy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;duohappy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.zhihu.com/people/duohappy" title="https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;duohappy" rel="noopener" target="_blank">知乎</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/zhouww" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;zhouww" rel="noopener" target="_blank">博客园</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhouww.life/2017/05/21/%E9%AB%98%E8%80%83%E5%90%A7%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/github_blog_myself.jpg">
+      <meta itemprop="name" content="duohappy">
+      <meta itemprop="description" content="怕什么真理无穷">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="duohappy's home">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          高考吧分析
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-05-21 14:29:47" itemprop="dateCreated datePublished" datetime="2017-05-21T14:29:47+08:00">2017-05-21</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-04-03 18:47:55" itemprop="dateModified" datetime="2021-04-03T18:47:55+08:00">2021-04-03</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="爬虫过程概述"><a href="#爬虫过程概述" class="headerlink" title="爬虫过程概述"></a>爬虫过程概述</h1><p>高考吧是一个大型贴吧，关注人数2406811，帖子总数<strong>200多万</strong>，花了5天时间爬取所有帖子的链接、标题、回复数、发帖时间，发帖用户和用户等级，总计2016964条记录。</p>
+<p>对爬取的过程稍作说明：</p>
+<ul>
+<li>爬取链接数：2417386</li>
+<li>去重后的链接数：2026735</li>
+<li>爬取成功的链接数：2016964</li>
+<li>被隐藏或删除的链接数：9771（如<a target="_blank" rel="noopener" href="http://tieba.baidu.com/p/4858811200%EF%BC%89">http://tieba.baidu.com/p/4858811200）</a></li>
+<li>爬取所用的程序语言：Python</li>
+<li>数据处理：Python+PowerBI+Excel（注：Python+Excel+PowerPivot运行缓慢，经常无响应，故弃之）</li>
+</ul>
+<span id="more"></span>
+
+<p>说实话，这也是我第一次爬取记录超过200万，数据文件达到238M，与高考吧管理人员交流后，发现自己可以爬取更多的用户信息比如用户性别等。</p>
+<p>数据处理采用了PowerBI，如果有更好的工具，欢迎交流。</p>
+<p>（注：此数据为2017年3月中旬的数据，与现在的数据有差异）</p>
+<h1 id="贴吧概况"><a href="#贴吧概况" class="headerlink" title="贴吧概况"></a>贴吧概况</h1><p>发帖人数占比与<a target="_blank" rel="noopener" href="http://www.jianshu.com/p/acb94db5e261">中考吧</a>相同，0回复率更高一点，高考吧的友好程度更低。经统计，发帖用户中会员人数占发帖总人数的0.02%，大概学生更愿意花钱买书吧。。。</p>
+<p><img src="/images/jianshu_duohappy/2746534-94eda06c1dcbdd91.png"></p>
+<p><img src="/images/jianshu_duohappy/2746534-0df75b4bce97b982.png"></p>
+<h1 id="年月周时发帖量"><a href="#年月周时发帖量" class="headerlink" title="年月周时发帖量"></a>年月周时发帖量</h1><h2 id="年发帖量"><a href="#年发帖量" class="headerlink" title="年发帖量"></a>年发帖量</h2><p>2013年发帖量最高，2016年发帖量环比下降超过50%，这一点和<a target="_blank" rel="noopener" href="http://www.jianshu.com/p/acb94db5e261">中考吧</a>极其相似，高考吧发帖量近几年下降明显，但是发帖量的数量级依然可以让人侧目，不是小贴吧能够相提并论的。</p>
+<p><img src="/images/jianshu_duohappy/2746534-5abd14b63fd970fb.png"></p>
+<h2 id="月发帖量"><a href="#月发帖量" class="headerlink" title="月发帖量"></a>月发帖量</h2><p>6月份高考，发帖量也最高</p>
+<p><img src="/images/jianshu_duohappy/2746534-797f646385e5baf1.png"></p>
+<h2 id="周发帖量"><a href="#周发帖量" class="headerlink" title="周发帖量"></a>周发帖量</h2><p>周末发帖量显著增加，不是很明白这一现象，高中应该没有周末吧，但是与高考吧的同学交流，并不是所有的学校都没有周末的。</p>
+<p><img src="/images/jianshu_duohappy/2746534-5aea1dd988e5e238.png"></p>
+<h2 id="时发帖量"><a href="#时发帖量" class="headerlink" title="时发帖量"></a>时发帖量</h2><p>晚上10点发帖量最高，好像熬夜特征挺明显的，在下面会对熬夜这一问题做深入分析。<br><img src="/images/jianshu_duohappy/2746534-e6589733cf29b478.png"></p>
+<h1 id="用户等级分布"><a href="#用户等级分布" class="headerlink" title="用户等级分布"></a>用户等级分布</h1><p>低等级用户占比较小，用户对贴吧依赖度较高<br><img src="/images/jianshu_duohappy/2746534-975d499966edb443.jpg"></p>
+<h1 id="十大热帖"><a href="#十大热帖" class="headerlink" title="十大热帖"></a>十大热帖</h1><p>热帖反映了用户最关心的问题，有什么比看热帖更带劲的事情吗？<br><img src="/images/jianshu_duohappy/2746534-a4ed17ac4de85236.png"></p>
+<p>（注：热帖的详细网址需要加<a target="_blank" rel="noopener" href="http://tieba.baidu.com,如http//tieba.baidu.com/p/2240661399%EF%BC%8C%E4%B8%8B%E5%90%8C%EF%BC%89">http://tieba.baidu.com，如http://tieba.baidu.com/p/2240661399，下同）</a></p>
+<h2 id="2013年十大热帖"><a href="#2013年十大热帖" class="headerlink" title="2013年十大热帖"></a>2013年十大热帖</h2><p>跟踪每年的热帖，及时发现用户兴趣点的变化，2013年作为最活跃的年份，帖子回复数的量级也不同一般年份<br><img src="/images/jianshu_duohappy/2746534-1a3e1233e58bf6f2.png"></p>
+<h2 id="2016年十大热帖"><a href="#2016年十大热帖" class="headerlink" title="2016年十大热帖"></a>2016年十大热帖</h2><p>近几年的活跃低谷年份—2016年，热帖回复数的最大值比2013年热帖的最小值要小得多，这届的吧友不行？开玩笑的，：)</p>
+<p><img src="/images/jianshu_duohappy/2746534-0f76615cc6f6d879.png"></p>
+<h1 id="十大活跃用户"><a href="#十大活跃用户" class="headerlink" title="十大活跃用户"></a>十大活跃用户</h1><p>找到活跃用户，然后可以做什么呢？追踪活跃用户的发言，维护活跃用户体系，我好像在说运营</p>
+<p><img src="/images/jianshu_duohappy/2746534-d82daf36d8a9a87f.png"></p>
+<h2 id="2013年十大活跃用户"><a href="#2013年十大活跃用户" class="headerlink" title="2013年十大活跃用户"></a>2013年十大活跃用户</h2><p>江山代有才人出，各领风骚数百年</p>
+<p><img src="/images/jianshu_duohappy/2746534-81f4d2292d85d073.png"></p>
+<h2 id="2016年十大活跃用户"><a href="#2016年十大活跃用户" class="headerlink" title="2016年十大活跃用户"></a>2016年十大活跃用户</h2><p><img src="/images/jianshu_duohappy/2746534-eeb17c7c6b0b61b7.png"></p>
+<h1 id="深入分析2013年发帖情况"><a href="#深入分析2013年发帖情况" class="headerlink" title="深入分析2013年发帖情况"></a>深入分析2013年发帖情况</h1><p>分析2013年每天的发帖量情况，3、4、5、6和7月的发帖量较大，特别是6月考完和出分的那段时间。<br><img src="/images/jianshu_duohappy/2746534-8269d3b635988f89.png"></p>
+<p>分析3、4、5、6和7月份的发帖时间，3、4和5月份中熬夜发帖人数占比较大，但是逐月减小，到了6月份后，熬夜比例减少一半左右，说明大部分人有好的考试习惯嘛。不能只看<strong>时发帖量</strong>的大趋势，要保持深挖数据的好习惯</p>
+<p><img src="/images/jianshu_duohappy/2746534-cf2b3955059dd76a.png"></p>
+<h1 id="贴吧关键词"><a href="#贴吧关键词" class="headerlink" title="贴吧关键词"></a>贴吧关键词</h1><p>200多万个标题做成词云</p>
+<p><img src="/images/jianshu_duohappy/2746534-fe2278c69001ca48.png"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>从高考吧的分析上来看，高考学生关心的内容和喜欢的内容形式，与中考吧类似。近年来，高考吧的发帖量不断下降，与百度贴吧活跃度走低的大环境密切相关，贴吧作为一个社区平台，社交功能做的并不好，对增强用户粘性很不利。</p>
+<h2 id="节选"><a href="#节选" class="headerlink" title="节选"></a>节选</h2><ul>
+<li>2012年<br><a target="_blank" rel="noopener" href="http://tieba.baidu.com/p/1653549741">http://tieba.baidu.com/p/1653549741</a></li>
+<li>2013年<br><a target="_blank" rel="noopener" href="http://tieba.baidu.com/p/2355829518">http://tieba.baidu.com/p/2355829518</a></li>
+<li>2016年<br><a target="_blank" rel="noopener" href="http://tieba.baidu.com/p/4533354100">http://tieba.baidu.com/p/4533354100</a></li>
+</ul>
+<hr>
+<p><strong>暴露一下年龄</strong><br><img src="/images/jianshu_duohappy/2746534-78b278f57eb18745.jpg" alt="十八岁的天空"></p>
+<p><img src="/images/jianshu_duohappy/2746534-8685691b1132e0dd.jpeg" alt="十八岁的天空-裴佩"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/PowerBI/" rel="tag"># PowerBI</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96/" rel="tag"># 数据可视化</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/05/21/%E7%86%9F%E6%82%89numpy%E5%92%8Cpandas/" rel="next" title="熟悉numpy和pandas">
+                  熟悉numpy和pandas <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">duohappy</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

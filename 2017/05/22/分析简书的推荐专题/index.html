@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouww.life","root":"/","images":"/images","scheme":"Pisces","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
+  </script>
+<meta name="description" content="第一篇：简书在Twitter、豆瓣、微博上的活动 简书推荐专题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分析简书的推荐专题">
+<meta property="og:url" content="http://zhouww.life/2017/05/22/%E5%88%86%E6%9E%90%E7%AE%80%E4%B9%A6%E7%9A%84%E6%8E%A8%E8%8D%90%E4%B8%93%E9%A2%98/index.html">
+<meta property="og:site_name" content="duohappy&#39;s home">
+<meta property="og:description" content="第一篇：简书在Twitter、豆瓣、微博上的活动 简书推荐专题">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-cc49a82aaa80b0a3.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-72706d9a25d13299.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-1a76aff40cd65554.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-9ee63dfddd6ec9c9.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-082039ea82c6469d.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-dabc80f6de451b70.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-1fe48f72975874de.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-5ff58afa9d4fbecc.png">
+<meta property="og:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-003d439e21b8722c.png">
+<meta property="article:published_time" content="2017-05-22T04:07:54.000Z">
+<meta property="article:modified_time" content="2021-04-03T11:02:46.424Z">
+<meta property="article:author" content="duohappy">
+<meta property="article:tag" content="数据分析">
+<meta property="article:tag" content="Tableau">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://zhouww.life/images/jianshu_duohappy/2746534-cc49a82aaa80b0a3.png">
+
+
+<link rel="canonical" href="http://zhouww.life/2017/05/22/%E5%88%86%E6%9E%90%E7%AE%80%E4%B9%A6%E7%9A%84%E6%8E%A8%E8%8D%90%E4%B8%93%E9%A2%98/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>分析简书的推荐专题 | duohappy's home</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">duohappy's home</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">hungry and foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%88%86%E6%9E%90%E7%AE%80%E4%B9%A6%E6%8E%A8%E8%8D%90%E4%B8%93%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">为什么分析简书推荐专题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%88%AC%E8%99%AB%E6%A6%82%E8%BF%B0"><span class="nav-number">2.</span> <span class="nav-text">爬虫概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E4%B9%A6%E2%80%94UGC%E7%A4%BE%E5%8C%BA"><span class="nav-number">3.</span> <span class="nav-text">简书—UGC社区</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E4%B9%A6%E4%B8%AD%E7%9A%84%E6%8E%A8%E8%8D%90%E4%B8%93%E9%A2%98"><span class="nav-number">4.</span> <span class="nav-text">简书中的推荐专题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E5%86%B5"><span class="nav-number">4.1.</span> <span class="nav-text">概况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%93%E9%A2%98%E7%AE%A1%E7%90%86%E5%91%98%E5%88%86%E6%9E%90"><span class="nav-number">4.2.</span> <span class="nav-text">专题管理员分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E4%B8%93%E9%A2%98%E8%AF%B4%E6%98%8E%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">4.3.</span> <span class="nav-text">推荐专题说明的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%89%8D%E7%9A%84%E6%8E%A8%E8%8D%90%E4%B8%93%E9%A2%98"><span class="nav-number">4.4.</span> <span class="nav-text">目前的推荐专题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="duohappy"
+      src="/images/github_blog_myself.jpg">
+  <p class="site-author-name" itemprop="name">duohappy</p>
+  <div class="site-description" itemprop="description">怕什么真理无穷</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">86</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/duohappy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;duohappy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.zhihu.com/people/duohappy" title="https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;duohappy" rel="noopener" target="_blank">知乎</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/zhouww" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;zhouww" rel="noopener" target="_blank">博客园</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhouww.life/2017/05/22/%E5%88%86%E6%9E%90%E7%AE%80%E4%B9%A6%E7%9A%84%E6%8E%A8%E8%8D%90%E4%B8%93%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/github_blog_myself.jpg">
+      <meta itemprop="name" content="duohappy">
+      <meta itemprop="description" content="怕什么真理无穷">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="duohappy's home">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          分析简书的推荐专题
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-05-22 12:07:54" itemprop="dateCreated datePublished" datetime="2017-05-22T12:07:54+08:00">2017-05-22</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-04-03 19:02:46" itemprop="dateModified" datetime="2021-04-03T19:02:46+08:00">2021-04-03</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>第一篇：<a target="_blank" rel="noopener" href="http://zhouww.com/2017/05/21/%E7%AE%80%E4%B9%A6%E5%9C%A8Twitter%E3%80%81%E8%B1%86%E7%93%A3%E3%80%81%E5%BE%AE%E5%8D%9A%E4%B8%8A%E7%9A%84%E6%B4%BB%E5%8A%A8/">简书在Twitter、豆瓣、微博上的活动</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.jianshu.com/recommendations/collections">简书推荐专题</a><br><img src="/images/jianshu_duohappy/2746534-cc49a82aaa80b0a3.png" alt="推荐专题"></p>
+<span id="more"></span>
+<h1 id="为什么分析简书推荐专题"><a href="#为什么分析简书推荐专题" class="headerlink" title="为什么分析简书推荐专题"></a>为什么分析简书推荐专题</h1><p>一开始并没有想到去分析简书推荐专题，我要分析简书平台的<strong>大部分文章和用户信息</strong>，爬取数据的思路不是太复杂，即爬取所有热门专题下的文章和订阅者信息，并且和<strong>官方的数据</strong>（比如100万）大致进行比较，存储用MongoDB，数据处理用pandas，可视化用Tableau。</p>
+<p><img src="/images/jianshu_duohappy/2746534-72706d9a25d13299.png" alt="简书用户数"></p>
+<p>你现在读到了这篇文章，也就证明我爬取大部分文章和用户信息的想法没有实现，当然技术上做过小范围尝试，没有遇到困难，简书的<strong>xhr请求的网址</strong>很有意思，可以试试看。<br>从运营的角度来看，现在爬取大部分文章和用户信息，我<strong>还找不到一个好的分析思路</strong>，不想为了爬数据而爬数据。在看到<strong>推荐专题</strong>这一栏目时，发现<strong>文章数目和关注人数</strong>都十分惊人，而且他们的创建者都是简书官方。猜测如果对推荐专题进行分析，可以获悉简书平台的<strong>大致倾向和创作状况</strong>。</p>
+<h1 id="爬虫概述"><a href="#爬虫概述" class="headerlink" title="爬虫概述"></a>爬虫概述</h1><p>爬取的内容：专题名称，概述，文章数目，关注者人数，管理员<br>编程语言：Python<br>可视化分析：Tableau</p>
+<p>注：不要看数据量少，就觉得爬取很简单，这个爬虫很锻炼爬虫技能的，<strong>而且有点难度</strong>，不信的话试试看</p>
+<h1 id="简书—UGC社区"><a href="#简书—UGC社区" class="headerlink" title="简书—UGC社区"></a>简书—UGC社区</h1><p>简书是一个UGC社区，我现在充当双重角色：内容供应者（我写文章）和内容消费者（我也看文章）。如果在简书平台的每一个用户都是一个信息体的话，简书在做什么呢？它在用<strong>多种方式</strong>完成两个信息体之间的沟通，避免<strong>信息孤岛</strong>。</p>
+<ul>
+<li>搜索和推荐</li>
+</ul>
+<p><img src="/images/jianshu_duohappy/2746534-1a76aff40cd65554.png" alt="搜索和推荐"></p>
+<ul>
+<li>订阅更新提醒和简友圈</li>
+</ul>
+<p><img src="/images/jianshu_duohappy/2746534-9ee63dfddd6ec9c9.png" alt="订阅更新提醒和简友圈"></p>
+<p>可是搜索、推荐、订阅更新提醒和简友圈这些功能并不是什么特色，<strong>我喜欢逛论坛，也当过一些论坛的版主</strong>，简书提供的功能几乎是大型社区都必备的，那么简书的<strong>特色</strong>是什么？会<strong>吸引</strong>到哪些人？为什么ta们会<strong>来简书写作</strong>？</p>
+<p>从水平社区来看，简书和知乎都是覆盖面很广泛的UGC社区，就目前而言，知乎和简书是不同的产品，知乎的结构<strong>以问题来组织</strong>，简书的结构<strong>以文章来组织</strong>，两个产品有不同的组织思路，满足用户的需求也不同。可是知乎的专栏也是以文章来组织的，而且知乎上不同领域专家群体庞大，完全就是<strong>简书的竞品</strong>。</p>
+<p>从垂直社区来看，以CSDN为例，它是一个IT社区。CSDN结合了文章和问题的组织方式，文章的组织方式体现在<strong>博客</strong>上，问题的组织方式体现在<strong>论坛和问答</strong>上。每一个有口碑的垂直社区，专家就在其中，这个可是一个挖掘核心用户的好地方，如果它的活跃用户转移到简书，那么简书中的垂直专题就可以做得更好，但是回到原来的问题，<strong>简书有什么吸引ta们的地方吗？</strong>在IT领域创作方面，有什么地方可以做得比博客园、CSDN等更好地满足用户需要呢？</p>
+<h1 id="简书中的推荐专题"><a href="#简书中的推荐专题" class="headerlink" title="简书中的推荐专题"></a>简书中的推荐专题</h1><h2 id="概况"><a href="#概况" class="headerlink" title="概况"></a>概况</h2><p>简书推荐专题：62个<br>简书推荐专题总关注人数：约为2千5百万（没有去重）<br>简书推荐专题总文章数：约为120万（没有去重）</p>
+<p>简书推荐专题的创建者都是官方人员，所以这些专题很有分析意义。<br><img src="/images/jianshu_duohappy/2746534-082039ea82c6469d.png" alt="专题创建者"></p>
+<h2 id="专题管理员分析"><a href="#专题管理员分析" class="headerlink" title="专题管理员分析"></a>专题管理员分析</h2><p>专题的创建者是<strong>官方人员</strong>，专题的管理员总不能只是一个官方人员。大约1/3专题的管理员人数为2人，散文专题的管理员人数最多，为15人。除了官方人员以外，其余人员是这些专题的<strong>核心用户</strong>了。<br><img src="/images/jianshu_duohappy/2746534-dabc80f6de451b70.png" alt="管理员人数分布"></p>
+<p>找到这些用户，ta们的行为更值得关注<br><img src="/images/jianshu_duohappy/2746534-1fe48f72975874de.png" alt="专题的管理员"><br>（注：保护用户隐私，用户名进行模糊化处理）</p>
+<h2 id="推荐专题说明的问题"><a href="#推荐专题说明的问题" class="headerlink" title="推荐专题说明的问题"></a>推荐专题说明的问题</h2><p><img src="/images/jianshu_duohappy/2746534-5ff58afa9d4fbecc.png"><br><img src="/images/jianshu_duohappy/2746534-003d439e21b8722c.png" alt="收录-关注-管理员人数"></p>
+<p>以收录文章数和关注人数的<strong>中位数</strong>将图形分为<strong>4个象限</strong>，很明显分布在第1象限的专题是简书比较有优势的方向，第1象限专题方向也就回答了<strong>简书吸引哪些用户</strong>的问题。</p>
+<ul>
+<li>收录的文章数多：这个方向的用户多，创作的人多，<strong>内容供给丰富</strong></li>
+<li>关注的人数多：这个方向的用户多，<strong>内容需求大</strong></li>
+<li>管理员人数多：这个方向的<strong>活跃用户多</strong></li>
+</ul>
+<p>这三个因素互相联系和影响。</p>
+<p>目前可以开发第2象限和第4象限的专题方向，如何开发呢？</p>
+<ul>
+<li>第2象限：<strong>文章多，消费少</strong>，可以去垂直社区宣传，让更多的内容消费者进来，相对容易</li>
+<li>第4象限：<strong>需求大，文章少</strong>，去垂直社区找活跃用户来简书创作，相对困难</li>
+</ul>
+<p>第3象限专题数量最多，<strong>专题方向发掘难度最大</strong>，消费和创作都是双低，值得思考的是简书这个平台具备良好的创作环境去开发这些方向吗？将单个方向进行分析，它们的垂直社区做得怎么样？简书可以做出哪些亮点？</p>
+<h2 id="目前的推荐专题"><a href="#目前的推荐专题" class="headerlink" title="目前的推荐专题"></a>目前的推荐专题</h2><p>以下完全是<strong>个人看法</strong>（很主观）<br>我关注了很多推荐的专题，也往有些专题投稿，但是这些专题每日推送文章数量基本超过99+，这种推送文章<strong>打开率</strong>能有多高呢？每天推送这么多文章难道不是一种<strong>打扰</strong>？文章多到让人<strong>不敢看</strong>了，多到让人想取消关注。</p>
+<p>官方做的这些推荐专题的<strong>目的是什么</strong>？这种知识的组织形式很糟糕</p>
+<p>（注：官方组织的这些推荐专题，对于爬虫的话，是一个极好的切入点）</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>简书的用户特点偏文艺，这个和豆瓣有点像，怪不得它不弄一个简书贴吧，而打造了一个豆瓣小站，：）</p>
+<p>这篇文章提了很多问题，以后进行深入分析后再来回答。解答这些问题需要很多数据支撑。我要慢慢熟悉一下业务，<strong>如果不熟悉业务，就没有分析思路，没有分析思路，那么爬什么数据呢</strong>。</p>
+<p>下一篇的分析文章需要弄明白简书的盈利模式后再写，<strong>没有弄清楚盈利，就看不清楚运营</strong>。</p>
+<p><strong>待更新</strong></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/" rel="tag"># 数据分析</a>
+              <a href="/tags/Tableau/" rel="tag"># Tableau</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/05/22/%E5%AE%89%E5%85%A8%E8%8F%9C%E9%B8%9F%E5%A6%82%E4%BD%95%E9%98%B2%E8%8C%83%E5%8B%92%E7%B4%A2%E7%97%85%E6%AF%92/" rel="prev" title="安全菜鸟如何防范勒索病毒">
+                  <i class="fa fa-chevron-left"></i> 安全菜鸟如何防范勒索病毒
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/05/22/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%BD%AF%E4%BB%B6%E5%88%97%E8%A1%A8/" rel="next" title="个人使用软件列表">
+                  个人使用软件列表 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">duohappy</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

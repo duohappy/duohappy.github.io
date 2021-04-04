@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouww.life","root":"/","images":"/images","scheme":"Pisces","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
+  </script>
+<meta name="description" content="至此，简书在Twitter、豆瓣、微博上的活动(持续更新)所需的所有爬虫技能已经更新完毕。结合下面两篇文章，可以完成Twitter，豆瓣，微博的爬虫，如果没有阅读前两篇文章，建议读一下，新文章一般不会涉及旧文的知识点。 简单网站爬虫的所有技能爬虫中的正则表达式 写在前面为什么要用selenium？因为它简单粗暴有效，当然缺点也一大堆，：）。每一个工具或者方法都有它的优点和局限，要选择适合的，而不是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="selenium简单使用，beautifulsoup始终beautiful">
+<meta property="og:url" content="http://zhouww.life/2017/05/22/selenium%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8%EF%BC%8Cbeautifulsoup%E5%A7%8B%E7%BB%88beautiful/index.html">
+<meta property="og:site_name" content="duohappy&#39;s home">
+<meta property="og:description" content="至此，简书在Twitter、豆瓣、微博上的活动(持续更新)所需的所有爬虫技能已经更新完毕。结合下面两篇文章，可以完成Twitter，豆瓣，微博的爬虫，如果没有阅读前两篇文章，建议读一下，新文章一般不会涉及旧文的知识点。 简单网站爬虫的所有技能爬虫中的正则表达式 写在前面为什么要用selenium？因为它简单粗暴有效，当然缺点也一大堆，：）。每一个工具或者方法都有它的优点和局限，要选择适合的，而不是">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-05-22T03:18:14.000Z">
+<meta property="article:modified_time" content="2021-04-03T10:52:52.411Z">
+<meta property="article:author" content="duohappy">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="爬虫">
+<meta property="article:tag" content="selenium">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://zhouww.life/2017/05/22/selenium%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8%EF%BC%8Cbeautifulsoup%E5%A7%8B%E7%BB%88beautiful/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>selenium简单使用，beautifulsoup始终beautiful | duohappy's home</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">duohappy's home</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">hungry and foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B%E8%AF%B4%E6%98%8E"><span class="nav-number">2.</span> <span class="nav-text">案例说明</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%B2%97%E6%9A%B4%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.1.</span> <span class="nav-text">简单粗暴的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%A6%E4%B8%80%E7%A7%8D%E6%80%9D%E8%B7%AF"><span class="nav-number">2.2.</span> <span class="nav-text">另一种思路</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%90%8E%E9%9D%A2"><span class="nav-number">3.</span> <span class="nav-text">写在后面</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="duohappy"
+      src="/images/github_blog_myself.jpg">
+  <p class="site-author-name" itemprop="name">duohappy</p>
+  <div class="site-description" itemprop="description">怕什么真理无穷</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">86</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/duohappy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;duohappy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.zhihu.com/people/duohappy" title="https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;duohappy" rel="noopener" target="_blank">知乎</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/zhouww" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;zhouww" rel="noopener" target="_blank">博客园</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhouww.life/2017/05/22/selenium%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8%EF%BC%8Cbeautifulsoup%E5%A7%8B%E7%BB%88beautiful/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/github_blog_myself.jpg">
+      <meta itemprop="name" content="duohappy">
+      <meta itemprop="description" content="怕什么真理无穷">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="duohappy's home">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          selenium简单使用，beautifulsoup始终beautiful
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-05-22 11:18:14" itemprop="dateCreated datePublished" datetime="2017-05-22T11:18:14+08:00">2017-05-22</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-04-03 18:52:52" itemprop="dateModified" datetime="2021-04-03T18:52:52+08:00">2021-04-03</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>至此，<a href="http://zhouww.life/2017/05/21/%E7%AE%80%E4%B9%A6%E5%9C%A8Twitter%E3%80%81%E8%B1%86%E7%93%A3%E3%80%81%E5%BE%AE%E5%8D%9A%E4%B8%8A%E7%9A%84%E6%B4%BB%E5%8A%A8/">简书在Twitter、豆瓣、微博上的活动(持续更新)</a><strong>所需的所有爬虫技能</strong>已经更新完毕。结合下面两篇文章，可以完成Twitter，豆瓣，微博的爬虫，如果没有阅读前两篇文章，<strong>建议读一下</strong>，新文章一般不会涉及旧文的知识点。</p>
+<p><a href="http://zhouww.life/2017/05/21/%E7%AE%80%E5%8D%95%E7%BD%91%E7%AB%99%E7%88%AC%E8%99%AB%E7%9A%84%E6%89%80%E6%9C%89%E6%8A%80%E8%83%BD/">简单网站爬虫的所有技能</a><br><a href="http://zhouww.life/2017/05/21/%E7%88%AC%E8%99%AB%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">爬虫中的正则表达式</a></p>
+<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>为什么要用selenium？<br>因为它简单粗暴有效，当然缺点也一大堆，：）。每一个工具或者方法都有它的<strong>优点和局限</strong>，要选择适合的，而不是网上所谓“最叼的”。</p>
+<span id="more"></span>
+<p>还有为什么标题是<strong>selenium的简单使用</strong>，因为….selenium较难的部分嘛，<strong>我也不会</strong>，很多知识我都是现学现用的。还记得<a href="http://zhouww.life/2017/05/22/Python%E7%88%AC%E8%99%AB%E5%90%8E%E7%9A%84%E5%8F%AF%E8%A7%86%E5%8C%96%E6%95%99%E7%A8%8B%E7%9B%AE%E5%BD%95/">EasyCharts团队成员杜雨</a>向我提了关于selenium的问题，我一个都不会。</p>
+<p>如果有时间，我就写写进阶一点的用法，比如网易云课堂的爬虫，&gt;_&lt;。至于为什么加<strong>beautifulsoup始终beautiful</strong>，这个嘛看看<a href="http://zhouww.life/2017/05/21/%E7%88%AC%E8%99%AB%E4%B8%AD%E7%9A%84%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">爬虫中的正则表达式</a>，在正则这篇文章中我提到 <em>sometimes beautifulsoup is not beautiful</em></p>
+<h1 id="案例说明"><a href="#案例说明" class="headerlink" title="案例说明"></a>案例说明</h1><p>爬取简书新浪微博第一页的源代码<br><a target="_blank" rel="noopener" href="http://weibo.com/2855893887/profile?is_search=0&amp;visible=0&amp;is_all=1&amp;is_tag=0&amp;profile_ftype=1&amp;page=1">http://weibo.com/2855893887/profile?is_search=0&amp;visible=0&amp;is_all=1&amp;is_tag=0&amp;profile_ftype=1&amp;page=1</a></p>
+<p>这里的源代码是指浏览器<strong>检查</strong>功能对应的源代码，而不是<strong>查看网页源代码</strong>功能对应的源代码。</p>
+<p>想象一下，这意味着什么？为什么又说<strong>beautifulsoup始终beautiful</strong>？</p>
+<h2 id="简单粗暴的实现"><a href="#简单粗暴的实现" class="headerlink" title="简单粗暴的实现"></a>简单粗暴的实现</h2><p><strong>Talk is cheap. Show you the code</strong><br>我会写好注释</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line">__author__ = <span class="string">&#x27;duohappy&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">simple_method</span>(<span class="params">url</span>):</span></span><br><span class="line">    <span class="comment"># 使用Edge浏览器，可以试试其他的浏览器，应该有意外收获，：）</span></span><br><span class="line">    driver = webdriver.Edge()</span><br><span class="line">    <span class="comment"># 窗口最大化</span></span><br><span class="line">    driver.maximize_window()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 请求网页</span></span><br><span class="line">    driver.get(url)</span><br><span class="line">    <span class="comment"># 等网页加载一会，其实嘛，你可以试试删除这条语句</span></span><br><span class="line">    time.sleep(<span class="number">2</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 计数变量</span></span><br><span class="line">    num = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="comment"># 控制滚动条的js代码</span></span><br><span class="line">        js = <span class="string">&quot;window.scrollTo(0, document.body.scrollHeight)&quot;</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 执行一次js，计数+1</span></span><br><span class="line">        num += <span class="number">1</span></span><br><span class="line">        driver.execute_script(js)</span><br><span class="line">        <span class="comment"># 每次执行后，等一会，让网页加载完毕</span></span><br><span class="line">        <span class="comment"># 是不是一定要2s，这个是我随便设置的，记住！先自己动手试试！</span></span><br><span class="line">        time.sleep(<span class="number">2</span>)</span><br><span class="line">        <span class="comment"># 执行了5次js后，我觉得网页应该全部加载完毕了，是不是这样的呢？自己试试</span></span><br><span class="line">        <span class="keyword">if</span> num == <span class="number">5</span>:</span><br><span class="line">            <span class="comment"># 把网页源代码写入文件中，用浏览器打开这个文件看看</span></span><br><span class="line">            <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;./page_simple.html&#x27;</span>, <span class="string">&#x27;w&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                f.write(driver.page_source)</span><br><span class="line">            <span class="comment"># 退出Edge</span></span><br><span class="line">            driver.quit()</span><br><span class="line">           <span class="comment"># 结束循环</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">     url = <span class="string">&#x27;http://weibo.com/2855893887/profile?is_search=0&amp;visible=0&amp;is_all=1&amp;is_tag=0&amp;profile_ftype=1&amp;page=1&#x27;</span></span><br><span class="line">    simple_method(url)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="另一种思路"><a href="#另一种思路" class="headerlink" title="另一种思路"></a>另一种思路</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line">__author__ = <span class="string">&#x27;duohappy&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">difficult_method</span>(<span class="params">url</span>):</span></span><br><span class="line">    driver = webdriver.Edge()</span><br><span class="line">    driver.maximize_window()</span><br><span class="line">    </span><br><span class="line">    driver.get(url)</span><br><span class="line">    <span class="comment"># 随便设置的等待时间</span></span><br><span class="line">    time.sleep(<span class="number">3</span>)</span><br><span class="line">    </span><br><span class="line">    js = <span class="string">&quot;window.scrollTo(0, document.body.scrollHeight)&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">           <span class="comment"># 如果网页里有div.W_pages，那就证明加载完成了</span></span><br><span class="line">            driver.find_element_by_css_selector(<span class="string">&#x27;div.W_pages&#x27;</span>)</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">           <span class="comment"># 如果没有，那么继续滚动吧</span></span><br><span class="line">            driver.execute_script(js)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;./page_difficult.html&#x27;</span>, <span class="string">&#x27;w&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(driver.page_source)</span><br><span class="line">        </span><br><span class="line">    driver.quit()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">     url = <span class="string">&#x27;http://weibo.com/2855893887/profile?is_search=0&amp;visible=0&amp;is_all=1&amp;is_tag=0&amp;profile_ftype=1&amp;page=1&#x27;</span></span><br><span class="line">    difficult_method(url)</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="写在后面"><a href="#写在后面" class="headerlink" title="写在后面"></a>写在后面</h1><p>本文仅仅涉及<strong>selenium极少的知识点</strong>，如果你之前不了解selenium，希望本文能给你打开一个新的窗口，让你的爬虫兵器库中多一件称手的兵器。顺便提一下，<strong>selenium有一个坑</strong>，这个可以看文章<a href="http://zhouww.life/2017/05/22/%E7%88%AC%E8%99%AB%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/">爬虫踩过的坑</a></p>
+<p>本章中的代码不算优雅，但是确实能解决问题，<strong>欢迎批评指正</strong>，：）</p>
+<p>要是你愿意把你更加优雅的方法共享出来，<strong>万分感谢</strong>！</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E7%88%AC%E8%99%AB/" rel="tag"># 爬虫</a>
+              <a href="/tags/selenium/" rel="tag"># selenium</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/05/21/%E7%AE%80%E4%B9%A6%E5%9C%A8Twitter%E3%80%81%E8%B1%86%E7%93%A3%E3%80%81%E5%BE%AE%E5%8D%9A%E4%B8%8A%E7%9A%84%E6%B4%BB%E5%8A%A8/" rel="prev" title="简书在Twitter、豆瓣、微博上的活动">
+                  <i class="fa fa-chevron-left"></i> 简书在Twitter、豆瓣、微博上的活动
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/05/22/%E5%85%B3%E4%BA%8E%E7%88%B1%E6%83%85%E2%80%94%E6%9F%90%E8%B1%86%E7%93%A3%E5%B0%8F%E7%BB%84/" rel="next" title="关于爱情—某豆瓣小组">
+                  关于爱情—某豆瓣小组 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">duohappy</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

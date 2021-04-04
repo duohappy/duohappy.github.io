@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouww.life","root":"/","images":"/images","scheme":"Pisces","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
+  </script>
+<meta name="description" content="文章未经允许，不可转载 经历写C++相关的文章并不是为了推销我的课程-Python_C_C++如何联合编程 ，我最开始用于图像处理的编程语言是Python，并不是C++。在工作中摸爬滚打后，学了C++，才有了系列课程和C++相关的文章。 首发https:&#x2F;&#x2F;zhouww.life">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图像处理中为什么使用上了C++">
+<meta property="og:url" content="http://zhouww.life/2021/02/10/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E4%B8%8A%E4%BA%86C++/index.html">
+<meta property="og:site_name" content="duohappy&#39;s home">
+<meta property="og:description" content="文章未经允许，不可转载 经历写C++相关的文章并不是为了推销我的课程-Python_C_C++如何联合编程 ，我最开始用于图像处理的编程语言是Python，并不是C++。在工作中摸爬滚打后，学了C++，才有了系列课程和C++相关的文章。 首发https:&#x2F;&#x2F;zhouww.life">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-02-10T04:00:00.000Z">
+<meta property="article:modified_time" content="2021-04-04T05:58:49.747Z">
+<meta property="article:author" content="duohappy">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="图像">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://zhouww.life/2021/02/10/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E4%B8%8A%E4%BA%86C++/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>图像处理中为什么使用上了C++ | duohappy's home</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">duohappy's home</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">hungry and foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%8F%E5%8E%86"><span class="nav-number">1.</span> <span class="nav-text">经历</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Python%E5%92%8CC"><span class="nav-number">2.</span> <span class="nav-text">Python和C++</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E9%87%87%E9%9B%86"><span class="nav-number">3.</span> <span class="nav-text">图像采集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%B7%E5%BA%B7%E5%A8%81%E8%A7%86"><span class="nav-number">3.1.</span> <span class="nav-text">海康威视</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%90%E7%BA%A2%E5%A4%96%E5%8E%82%E5%95%86"><span class="nav-number">3.2.</span> <span class="nav-text">某红外厂商</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">训练模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E9%83%A8%E7%BD%B2"><span class="nav-number">5.</span> <span class="nav-text">算法部署</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="duohappy"
+      src="/images/github_blog_myself.jpg">
+  <p class="site-author-name" itemprop="name">duohappy</p>
+  <div class="site-description" itemprop="description">怕什么真理无穷</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">86</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/duohappy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;duohappy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.zhihu.com/people/duohappy" title="https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;duohappy" rel="noopener" target="_blank">知乎</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/zhouww" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;zhouww" rel="noopener" target="_blank">博客园</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhouww.life/2021/02/10/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E4%B8%8A%E4%BA%86C++/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/github_blog_myself.jpg">
+      <meta itemprop="name" content="duohappy">
+      <meta itemprop="description" content="怕什么真理无穷">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="duohappy's home">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          图像处理中为什么使用上了C++
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-02-10 12:00:00" itemprop="dateCreated datePublished" datetime="2021-02-10T12:00:00+08:00">2021-02-10</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-04-04 13:58:49" itemprop="dateModified" datetime="2021-04-04T13:58:49+08:00">2021-04-04</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><strong>文章未经允许，不可转载</strong></p>
+<h1 id="经历"><a href="#经历" class="headerlink" title="经历"></a>经历</h1><p>写C++相关的文章并不是为了推销我的课程-<a href="https://zhouww.life/2021/02/01/Python%20C%20C++%E5%A6%82%E4%BD%95%E8%81%94%E5%90%88%E7%BC%96%E7%A8%8B/">Python_C_C++如何联合编程 </a>，我最开始用于图像处理的编程语言是Python，并不是C++。在工作中摸爬滚打后，学了C++，才有了系列课程和C++相关的文章。</p>
+<p>首发<a href="https://zhouww.life/">https://zhouww.life</a></p>
+<span id="more"></span>
+<p>准确来说，我从2018年9月份才正式接触了图像处理领域，一开始就用深度学习解决目标检测的问题，当然了，这主要是源于工作的具体要求。当我开始从事这方面的工作后，我做了几件事情：</p>
+<p>第一：搭建深度学习服务器，磁盘阵列中用raid 1制作系统所在分区，raid 5制作数据区，安装Ubuntu、cuda、cudnn及相应的深度学习框架（tensorflow、pytorch等）<br>第二：封装海康威视SDK、某厂商红外图像的SDK等一些不提供Python的SDK，交由Python调用<br>第三：核心算法用C++编写，同样做封装给Python调用<br>第四：业务逻辑使用Python编写，界面使用PyQt，各种科学图像使用Matplotlib<br>第五：对于性能要求高的任务，全部采用C++，界面采用Qt</p>
+<h1 id="Python和C"><a href="#Python和C" class="headerlink" title="Python和C++"></a>Python和C++</h1><p>可能大家会问为什么牵扯到了Python？<br>说实话，是因为C++人手不够，开发完毕需要的时间太长，拖延了项目进度，需要结合Python开发块的优势。当然了，自己的C++水平也有限。</p>
+<p>通过这几年学习C++和Python，给我很大的感受：C++真的式微了。在github上的C++项目，有几百个star，就代表很多人关注了，而随随便便一个Python项目，却有上千个star。我并不认为这是一个坏趋势，而是觉得这是趋势。</p>
+<p>每个人所在的领域时间久了，自然的认为手头的工具依然是好用且受到青睐的，但是殊不知改变总是在发生，本来某个工具固守的疆域会因为其他的变化如硬件性能、软件开发时长、可维护性等，被另一个工具给慢慢蚕食掉。</p>
+<p>回答本文最大的问题：图像处理中为什么使用了C++？<br>表面上是工作需要，本质是C++守住了图像处理的疆域</p>
+<h1 id="图像采集"><a href="#图像采集" class="headerlink" title="图像采集"></a>图像采集</h1><p>图像处理的第一步就是要获取图像，现实当中获取图像并不是那么简单，主要是因为很多厂商仅仅提供了C++的开发套件，要学习C++就不简单了。</p>
+<h2 id="海康威视"><a href="#海康威视" class="headerlink" title="海康威视"></a>海康威视</h2><p><a href="https://zhouww.life/2020/05/01/%E6%B5%B7%E5%BA%B7%E5%A8%81%E8%A7%86%E6%91%84%E5%83%8F%E6%9C%BASDK%E7%9A%84%E4%BD%BF%E7%94%A8/">海康威视摄像机SDK的使用</a></p>
+<p>海康威视摄像机是支持rtsp协议的，所以就算没有提供Python等高级语言的SDK，用opencv-python直接读取rtsp流，同样可以完成图像采集任务。<br>但是对于实时性要求高的任务，不建议用rtsp流，除非你能忍受至少2~3秒的延时。拿深度学习任务来说，用上了GPU，就是为了图像处理任务的耗时降到毫秒级别，结果用rtsp流直接导致秒级延时，会让后面的优化过程功亏一篑。</p>
+<h2 id="某红外厂商"><a href="#某红外厂商" class="headerlink" title="某红外厂商"></a>某红外厂商</h2><p><a href="https://zhouww.life/2020/06/01/%E7%BA%A2%E5%A4%96%E5%9B%BE%E5%83%8F%E9%87%87%E9%9B%86-V4L2/">红外图像采集-V4L2</a><br>对于红外图像，要是能提供一个好用的C++ SDK，就证明这个厂商的技术实力很好了。红外厂商一般提供C++接口，像Flir等大厂，也有C#接口的。</p>
+<h1 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h1><p>采集到图像后，就要进行图像处理，对于深度学习来说，一台带有GPU的服务器用于训练模型必不可少。训练阶段用Python就足够了，因为深度学习框架主打编程语言就是Python。我常用的框架有darknet，对于深度学习框架，我准备写篇文章，说一下我的感受。</p>
+<h1 id="算法部署"><a href="#算法部署" class="headerlink" title="算法部署"></a>算法部署</h1><p>算法部署的话，采用嵌入式设备，建议采用C++。一个项目并不只有图像处理的任务，而是多个任务一起的，每个人负责一部分，所以我一般采用的方式：</p>
+<ul>
+<li>用C++编写DLL，其他人也用C++语言，调用我的DLL。至于如何封装DLL，建议用上编译防火墙技术。<a href="https://zhouww.life/2019/08/10/C++-DLL-rule%20five-pimpl%EF%BC%88%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B%EF%BC%89/">C++-DLL-rule five-pimpl</a></li>
+<li>封装我写的代码，其他人用Python调用。<a href="https://zhouww.life/2021/02/01/Python%20C%20C++%E5%A6%82%E4%BD%95%E8%81%94%E5%90%88%E7%BC%96%E7%A8%8B/">Python_C_C++如何联合编程 </a></li>
+<li>大概率用到了Qt，可以看看关于Qt的文章。<a href="https://zhouww.life/2019/10/06/Qt-%E6%B3%A8%E6%84%8F%E9%9A%90%E5%BC%8F%E5%85%B1%E4%BA%AB%E6%9C%BA%E5%88%B6/">Qt-注意隐式共享机制</a>、<a href="https://zhouww.life/2019/11/02/Qt-%E5%A4%9A%E7%BA%BF%E7%A8%8B-%E6%9C%80%E5%A5%BD%E4%BD%BF%E7%94%A8%E5%AE%98%E6%96%B9%E6%8E%A8%E8%8D%90%E7%9A%84%E6%96%B9%E5%BC%8F/">Qt-多线程-最好使用官方推荐的方式</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+              <a href="/tags/%E5%9B%BE%E5%83%8F/" rel="tag"># 图像</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/02/01/matplotlib%E5%B5%8C%E5%85%A5%E5%88%B0PyQt5/" rel="prev" title="matplotlib嵌入到PyQt5">
+                  <i class="fa fa-chevron-left"></i> matplotlib嵌入到PyQt5
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/02/11/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E5%8F%8A%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E4%B8%80%E4%BA%9B%E6%84%9F%E6%82%9F/" rel="next" title="深度学习框架学习及深度学习的一些感悟">
+                  深度学习框架学习及深度学习的一些感悟 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">duohappy</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

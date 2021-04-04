@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouww.life","root":"/","images":"/images","scheme":"Pisces","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
+  </script>
+<meta name="description" content="严肃点Python、C语言、C++联合编程，可以发挥出C、C++的性能和Python的便利，我相信这是很多人一直想要的功能。但是网络上一直没有几个课程来讲述这个问题，所以我做了几个视频，系统谈谈自己在联合编程实践中遇到的坑，抛砖引玉。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python_C_C++如何联合编程">
+<meta property="og:url" content="http://zhouww.life/2021/02/01/Python%20C%20C++%E5%A6%82%E4%BD%95%E8%81%94%E5%90%88%E7%BC%96%E7%A8%8B/index.html">
+<meta property="og:site_name" content="duohappy&#39;s home">
+<meta property="og:description" content="严肃点Python、C语言、C++联合编程，可以发挥出C、C++的性能和Python的便利，我相信这是很多人一直想要的功能。但是网络上一直没有几个课程来讲述这个问题，所以我做了几个视频，系统谈谈自己在联合编程实践中遇到的坑，抛砖引玉。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://zhouww.life/images/2021/python_c_c++%E8%81%94%E5%90%88%E7%BC%96%E7%A8%8B-%E5%AF%B9%E6%AF%94-%E6%B0%B4%E5%8D%B0.png">
+<meta property="og:image" content="http://zhouww.life/images/2021/ctypes%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C-%E6%B0%B4%E5%8D%B0.png">
+<meta property="og:image" content="http://zhouww.life/images/2021/boost%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C-%E6%B0%B4%E5%8D%B0.png">
+<meta property="og:image" content="http://zhouww.life/images/2021/opencv-python%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C-%E6%B0%B4%E5%8D%B0.png">
+<meta property="article:published_time" content="2021-02-01T03:09:10.000Z">
+<meta property="article:modified_time" content="2021-04-03T09:19:46.271Z">
+<meta property="article:author" content="duohappy">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="ctypes">
+<meta property="article:tag" content="boost-python">
+<meta property="article:tag" content="opencv-python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://zhouww.life/images/2021/python_c_c++%E8%81%94%E5%90%88%E7%BC%96%E7%A8%8B-%E5%AF%B9%E6%AF%94-%E6%B0%B4%E5%8D%B0.png">
+
+
+<link rel="canonical" href="http://zhouww.life/2021/02/01/Python%20C%20C++%E5%A6%82%E4%BD%95%E8%81%94%E5%90%88%E7%BC%96%E7%A8%8B/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>Python_C_C++如何联合编程 | duohappy's home</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">duohappy's home</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">hungry and foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%A5%E8%82%83%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">严肃点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9C%9F%E5%AE%9E%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">真实点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B2%A1%E6%9C%89%E5%AF%B9%E6%AF%94%E5%B0%B1%E6%B2%A1%E6%9C%89%E9%80%89%E6%8B%A9%E5%9B%B0%E9%9A%BE"><span class="nav-number">3.</span> <span class="nav-text">没有对比就没有选择困难</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AF%BE%E7%A8%8B%E5%9C%A8%E5%93%AA%E9%87%8C"><span class="nav-number">4.</span> <span class="nav-text">课程在哪里</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ctypes"><span class="nav-number">4.1.</span> <span class="nav-text">ctypes</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#boost"><span class="nav-number">4.2.</span> <span class="nav-text">boost</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#opencv"><span class="nav-number">4.3.</span> <span class="nav-text">opencv</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">常见问题</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="duohappy"
+      src="/images/github_blog_myself.jpg">
+  <p class="site-author-name" itemprop="name">duohappy</p>
+  <div class="site-description" itemprop="description">怕什么真理无穷</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">86</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/duohappy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;duohappy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.zhihu.com/people/duohappy" title="https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;duohappy" rel="noopener" target="_blank">知乎</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/zhouww" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;zhouww" rel="noopener" target="_blank">博客园</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhouww.life/2021/02/01/Python%20C%20C++%E5%A6%82%E4%BD%95%E8%81%94%E5%90%88%E7%BC%96%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/github_blog_myself.jpg">
+      <meta itemprop="name" content="duohappy">
+      <meta itemprop="description" content="怕什么真理无穷">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="duohappy's home">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python_C_C++如何联合编程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-02-01 11:09:10" itemprop="dateCreated datePublished" datetime="2021-02-01T11:09:10+08:00">2021-02-01</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-04-03 17:19:46" itemprop="dateModified" datetime="2021-04-03T17:19:46+08:00">2021-04-03</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="严肃点"><a href="#严肃点" class="headerlink" title="严肃点"></a>严肃点</h1><p>Python、C语言、C++联合编程，可以发挥出C、C++的性能和Python的便利，我相信这是很多人一直想要的功能。但是网络上一直没有几个课程来讲述这个问题，<strong>所以我做了几个视频，系统谈谈自己在联合编程实践中遇到的坑，抛砖引玉</strong>。</p>
+<span id="more"></span>
+<h1 id="真实点"><a href="#真实点" class="headerlink" title="真实点"></a>真实点</h1><p>C语言、C++太难用了，<strong>要是一直能用Python该多好了</strong>，无奈自己的身处工业制造行业，很多工具仅仅提供C、C++的SDK，其余的编程语言一律不提供。完全用C、C++开发，<strong>开发速度较慢，自身能力不太行、领导容易不满，再加上人手不够</strong>，时间节点不能总是卡在我这里吧。万般无奈，思前想后的解决方式是对仅提供C、C++的SDK封装一层后，交由Python调用，大部分的业务逻辑还是Python来完成。这样做后，可以大大缩短工期，你好，我好，大家好。</p>
+<h1 id="没有对比就没有选择困难"><a href="#没有对比就没有选择困难" class="headerlink" title="没有对比就没有选择困难"></a>没有对比就没有选择困难</h1><p>在努力寻找联合编程的教程后，发现网络上的文章很杂很乱，又很少，捋不清头绪。不知道你是不是和像我一样，找教程而不得。如果有，我下面的文字，一定会对你有所帮助。</p>
+<p>先来一份自己的<strong>总结表格</strong>，梳理网上常见的解决方案：</p>
+<p><img src="/images/2021/python_c_c++%E8%81%94%E5%90%88%E7%BC%96%E7%A8%8B-%E5%AF%B9%E6%AF%94-%E6%B0%B4%E5%8D%B0.png"></p>
+<p>结论：</p>
+<ul>
+<li>如果仅仅用C语言，那么用Python自带的ctypes库就蛮好用的；</li>
+<li>如果需要用C++，那么用boost-python和pybind11都可以；</li>
+<li>如果你是图像处理从业者，那么直接用opencv，就可以完成Python和C++的交互。</li>
+</ul>
+<h1 id="课程在哪里"><a href="#课程在哪里" class="headerlink" title="课程在哪里"></a>课程在哪里</h1><h2 id="ctypes"><a href="#ctypes" class="headerlink" title="ctypes"></a>ctypes</h2><p>课程链接：<a target="_blank" rel="noopener" href="https://study.163.com/course/courseMain.htm?share=2&shareId=480000002243495&courseId=1211147802">Python ctypes和C语言交互</a><br>网易云课堂搜索：ctypes<br><img src="/images/2021/ctypes%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C-%E6%B0%B4%E5%8D%B0.png"></p>
+<h2 id="boost"><a href="#boost" class="headerlink" title="boost"></a>boost</h2><p>课程链接：<a target="_blank" rel="noopener" href="https://study.163.com/course/courseMain.htm?share=2&shareId=480000002243495&courseId=1211161802">boost python和C++交互</a><br>网易云课堂搜索：boost<br><img src="/images/2021/boost%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C-%E6%B0%B4%E5%8D%B0.png"></p>
+<h2 id="opencv"><a href="#opencv" class="headerlink" title="opencv"></a>opencv</h2><p>课程链接：<a target="_blank" rel="noopener" href="https://study.163.com/course/courseMain.htm?share=2&shareId=480000002243495&courseId=1211162803">编译自己的opencv-python</a><br>网易云课堂搜索：opencv-python<br><img src="/images/2021/opencv-python%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C-%E6%B0%B4%E5%8D%B0.png"></p>
+<h1 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h1><ul>
+<li><p>pybind11是现代的C++，boost-python历史包袱太重，选择哪一个？<br>我目前用的是boost-python，很重要原因是自带的boost-numpy库，可以很方便的和Python numpy进行交互，帮助文档也较全。写Python的，对numpy库肯定不陌生，它太重要了。<br>boost被人诟病的一点就是编译太复杂，容易出错，我将在课程中论述其中的注意事项，我相信你学完后，会觉得编译其实很简单。</p>
+</li>
+<li><p>为什么opencv这个图像库也入选了？<br>opencv对于Python的封装，本来就是基于numpy，而且官方的源码也清楚明白，如果你经常使用opencv库，直接看这个课程，肯定可以拓展你的技能树。</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/ctypes/" rel="tag"># ctypes</a>
+              <a href="/tags/boost-python/" rel="tag"># boost-python</a>
+              <a href="/tags/opencv-python/" rel="tag"># opencv-python</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/08/02/Ubuntu18.04-%E5%A4%9A%E4%B8%AAPython%E7%89%88%E6%9C%AC%E5%85%B1%E5%AD%98-pyenv-Jetson%20TX2-JetPack%204.3-pytorch%E5%AE%89%E8%A3%85-torchvision/" rel="prev" title="Ubuntu18.04-多个Python版本共存-pyenv-Jetson TX2-JetPack 4.3-pytorch安装-torchvision">
+                  <i class="fa fa-chevron-left"></i> Ubuntu18.04-多个Python版本共存-pyenv-Jetson TX2-JetPack 4.3-pytorch安装-torchvision
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/02/01/matplotlib%E5%B5%8C%E5%85%A5%E5%88%B0PyQt5/" rel="next" title="matplotlib嵌入到PyQt5">
+                  matplotlib嵌入到PyQt5 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">duohappy</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

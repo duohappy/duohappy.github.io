@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouww.life","root":"/","images":"/images","scheme":"Pisces","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
+  </script>
+<meta name="description" content="系统安全类 Win10 使用bash   Virtualbox Ubuntu   Sandboxie 有些网站，嗯，你懂的   eset 防火墙很好用   TC 不一定需要使用快捷键，它的双窗口本身就很有用，只用鼠标点击也可以达到效率提升的目的。不要给自己设限   cmder Windows下，Python有时会提示编码错误的问题，使用cmder运行py文件试试看（前提配置好cmder）   gi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="个人使用软件列表">
+<meta property="og:url" content="http://zhouww.life/2017/05/22/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%BD%AF%E4%BB%B6%E5%88%97%E8%A1%A8/index.html">
+<meta property="og:site_name" content="duohappy&#39;s home">
+<meta property="og:description" content="系统安全类 Win10 使用bash   Virtualbox Ubuntu   Sandboxie 有些网站，嗯，你懂的   eset 防火墙很好用   TC 不一定需要使用快捷键，它的双窗口本身就很有用，只用鼠标点击也可以达到效率提升的目的。不要给自己设限   cmder Windows下，Python有时会提示编码错误的问题，使用cmder运行py文件试试看（前提配置好cmder）   gi">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-05-22T04:12:01.000Z">
+<meta property="article:modified_time" content="2021-04-03T03:41:57.378Z">
+<meta property="article:author" content="duohappy">
+<meta property="article:tag" content="软件">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://zhouww.life/2017/05/22/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%BD%AF%E4%BB%B6%E5%88%97%E8%A1%A8/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>个人使用软件列表 | duohappy's home</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">duohappy's home</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">hungry and foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E5%AE%89%E5%85%A8%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">系统安全类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E7%BC%96%E8%BE%91%E7%B1%BB"><span class="nav-number">2.</span> <span class="nav-text">文本编辑类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">数据可视化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%9B%86%E6%88%90%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83"><span class="nav-number">4.</span> <span class="nav-text">集成开发环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86%E7%B1%BB"><span class="nav-number">5.</span> <span class="nav-text">知识管理类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BD%B1%E9%9F%B3%E5%9B%BE%E5%83%8F"><span class="nav-number">6.</span> <span class="nav-text">影音图像</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A7%91%E7%A0%94%E5%B7%A5%E5%85%B7"><span class="nav-number">7.</span> <span class="nav-text">科研工具</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="duohappy"
+      src="/images/github_blog_myself.jpg">
+  <p class="site-author-name" itemprop="name">duohappy</p>
+  <div class="site-description" itemprop="description">怕什么真理无穷</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">86</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/duohappy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;duohappy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.zhihu.com/people/duohappy" title="https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;duohappy" rel="noopener" target="_blank">知乎</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/zhouww" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;zhouww" rel="noopener" target="_blank">博客园</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhouww.life/2017/05/22/%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E8%BD%AF%E4%BB%B6%E5%88%97%E8%A1%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/github_blog_myself.jpg">
+      <meta itemprop="name" content="duohappy">
+      <meta itemprop="description" content="怕什么真理无穷">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="duohappy's home">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          个人使用软件列表
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2017-05-22 12:12:01" itemprop="dateCreated datePublished" datetime="2017-05-22T12:12:01+08:00">2017-05-22</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-04-03 11:41:57" itemprop="dateModified" datetime="2021-04-03T11:41:57+08:00">2021-04-03</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="系统安全类"><a href="#系统安全类" class="headerlink" title="系统安全类"></a>系统安全类</h1><ul>
+<li>Win10<ul>
+<li>使用bash</li>
+</ul>
+</li>
+<li>Virtualbox<ul>
+<li>Ubuntu</li>
+</ul>
+</li>
+<li>Sandboxie<ul>
+<li>有些网站，嗯，你懂的</li>
+</ul>
+</li>
+<li>eset<ul>
+<li>防火墙很好用</li>
+</ul>
+</li>
+<li>TC<ul>
+<li>不一定需要<strong>使用快捷键</strong>，它的双窗口本身就很有用，只用<strong>鼠标点击</strong>也可以达到效率提升的目的。<strong>不要给自己设限</strong></li>
+</ul>
+</li>
+<li>cmder<ul>
+<li>Windows下，Python有时会提示<strong>编码错误</strong>的问题，使用cmder运行py文件试试看（前提配置好cmder）</li>
+</ul>
+</li>
+<li>gitbash<ul>
+<li>很好用的git工具</li>
+</ul>
+</li>
+<li>github desktop<ul>
+<li>一开始学习git的时候，使用的是命令行，操作github也是使用命令行。现在几乎都是用图形界面操作。<strong>图形界面让问题变得简单</strong>，如果对github的操作不是太复杂，那么推荐使用github desktop（真心不好安装，要做好心理准备）<span id="more"></span></li>
+</ul>
+</li>
+</ul>
+<h1 id="文本编辑类"><a href="#文本编辑类" class="headerlink" title="文本编辑类"></a>文本编辑类</h1><ul>
+<li>不推荐使用Notepad++</li>
+<li>EmEditor<ul>
+<li>编辑csv真是一绝</li>
+</ul>
+</li>
+<li>国产EverEdit<ul>
+<li>打开大文件很快</li>
+<li>界面漂亮</li>
+</ul>
+</li>
+<li>写Python有时候需要调试，会使用VSCode</li>
+<li>texlive<ul>
+<li>有时会写一些TeX的文档，虽然很少</li>
+</ul>
+</li>
+<li>Linux下，gedit、kate、Vim等</li>
+</ul>
+<h1 id="数据可视化"><a href="#数据可视化" class="headerlink" title="数据可视化"></a>数据可视化</h1><ul>
+<li>Excel<ul>
+<li>Power Query</li>
+<li>Power Pivot</li>
+<li>Power View（不看好这个插件）</li>
+</ul>
+</li>
+<li>Tableau</li>
+<li>PowerBI</li>
+<li>Python中的matplotlib</li>
+</ul>
+<h1 id="集成开发环境"><a href="#集成开发环境" class="headerlink" title="集成开发环境"></a>集成开发环境</h1><ul>
+<li>Python<ul>
+<li>PyCharm</li>
+</ul>
+</li>
+<li>Java<ul>
+<li>Eclipse</li>
+<li>面向对象的思想，还真是学习了Java之后才明白的（封装、继承、多态），我是学习了Java后才学的Python。</li>
+</ul>
+</li>
+<li>matlab<ul>
+<li>matlab，:)</li>
+</ul>
+</li>
+<li>C<ul>
+<li>CodeBlocks</li>
+</ul>
+</li>
+<li>C#<ul>
+<li>VS</li>
+</ul>
+</li>
+<li>VB<ul>
+<li>我学的时候，学校给的教材还是VB 6.0</li>
+</ul>
+</li>
+</ul>
+<h1 id="知识管理类"><a href="#知识管理类" class="headerlink" title="知识管理类"></a>知识管理类</h1><ul>
+<li>为知笔记<ul>
+<li>用了近5年，很好用</li>
+</ul>
+</li>
+</ul>
+<h1 id="影音图像"><a href="#影音图像" class="headerlink" title="影音图像"></a>影音图像</h1><ul>
+<li>potplayer<ul>
+<li>简洁大方好用</li>
+</ul>
+</li>
+<li>IrfanView<ul>
+<li>快</li>
+</ul>
+</li>
+<li>paint.net<ul>
+<li>伪资深PS高手的替代品</li>
+</ul>
+</li>
+</ul>
+<h1 id="科研工具"><a href="#科研工具" class="headerlink" title="科研工具"></a>科研工具</h1><ul>
+<li>Axmath<ul>
+<li>足以代替MathType的国产公式编辑器</li>
+<li>价格极其实惠</li>
+</ul>
+</li>
+<li>Zotero<ul>
+<li>开源文献管理工具，和本土的NoteExpress可以互补</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%BD%AF%E4%BB%B6/" rel="tag"># 软件</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2017/05/22/%E5%88%86%E6%9E%90%E7%AE%80%E4%B9%A6%E7%9A%84%E6%8E%A8%E8%8D%90%E4%B8%93%E9%A2%98/" rel="prev" title="分析简书的推荐专题">
+                  <i class="fa fa-chevron-left"></i> 分析简书的推荐专题
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/06/27/%E4%B9%A0%E6%83%AF%E5%86%99if-name/" rel="next" title="习惯写if __name__ == '__main__'">
+                  习惯写if __name__ == '__main__' <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">duohappy</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhouww.life","root":"/","images":"/images","scheme":"Pisces","version":"8.3.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}};
+  </script>
+<meta name="description" content="文章未经允许，不可转载 写在前面这一篇比较长的总结文章，不会讲网上已经泛滥成灾的内容，重点讲自己遇到的技术问题和心得。以图像处理项目为主线，穿插着技术和生活的体会，阅读起来可能有些枯燥，我尽量写得生动一些。 想当年，我右手Python，左手SQL，内心装着产品和运营，成为了一名光荣的数据分析师，这样的日子并不长；我现在右手Python，左手C++，内心装着甲方和乙方，成为了一名光荣的图像工程师，这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图像处理项目的体会和感想">
+<meta property="og:url" content="http://zhouww.life/2021/02/12/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%BD%93%E4%BC%9A%E5%92%8C%E6%84%9F%E6%83%B3/index.html">
+<meta property="og:site_name" content="duohappy&#39;s home">
+<meta property="og:description" content="文章未经允许，不可转载 写在前面这一篇比较长的总结文章，不会讲网上已经泛滥成灾的内容，重点讲自己遇到的技术问题和心得。以图像处理项目为主线，穿插着技术和生活的体会，阅读起来可能有些枯燥，我尽量写得生动一些。 想当年，我右手Python，左手SQL，内心装着产品和运营，成为了一名光荣的数据分析师，这样的日子并不长；我现在右手Python，左手C++，内心装着甲方和乙方，成为了一名光荣的图像工程师，这">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-02-12T04:00:00.000Z">
+<meta property="article:modified_time" content="2021-04-04T11:17:48.055Z">
+<meta property="article:author" content="duohappy">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="图像">
+<meta property="article:tag" content="深度学习">
+<meta property="article:tag" content="项目">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://zhouww.life/2021/02/12/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%BD%93%E4%BC%9A%E5%92%8C%E6%84%9F%E6%83%B3/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>图像处理项目的体会和感想 | duohappy's home</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">duohappy's home</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">hungry and foolish</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-number">1.</span> <span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E5%92%8C%E9%A1%B9%E7%9B%AE"><span class="nav-number">2.</span> <span class="nav-text">技术和项目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E5%BB%BA%E5%9B%BE%E5%83%8F%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">3.</span> <span class="nav-text">组建图像数据集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E6%BA%90%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">3.1.</span> <span class="nav-text">开源数据集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E7%89%B9%E6%9C%89%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">3.2.</span> <span class="nav-text">项目特有的数据集</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A0%87%E6%B3%A8%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-number">4.</span> <span class="nav-text">标注数据集</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9E%8B%E5%8F%8A%E8%AE%AD%E7%BB%83"><span class="nav-number">5.</span> <span class="nav-text">深度学习模型及训练</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">5.1.</span> <span class="nav-text">搭建深度学习服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E5%BF%83%E5%BE%97"><span class="nav-number">5.2.</span> <span class="nav-text">训练心得</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2"><span class="nav-number">6.</span> <span class="nav-text">部署</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#PC%E6%9C%BA%E5%99%A8"><span class="nav-number">6.1.</span> <span class="nav-text">PC机器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%AE%BE%E5%A4%87-jetson-tx2"><span class="nav-number">6.2.</span> <span class="nav-text">嵌入式设备 jetson tx2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python-C-%E8%81%94%E5%90%88%E7%BC%96%E7%A8%8B"><span class="nav-number">6.3.</span> <span class="nav-text">Python C++联合编程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C"><span class="nav-number">7.</span> <span class="nav-text">项目经验</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="duohappy"
+      src="/images/github_blog_myself.jpg">
+  <p class="site-author-name" itemprop="name">duohappy</p>
+  <div class="site-description" itemprop="description">怕什么真理无穷</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">86</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/duohappy" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;duohappy" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://www.zhihu.com/people/duohappy" title="https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;duohappy" rel="noopener" target="_blank">知乎</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.cnblogs.com/zhouww" title="https:&#x2F;&#x2F;www.cnblogs.com&#x2F;zhouww" rel="noopener" target="_blank">博客园</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhouww.life/2021/02/12/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E9%A1%B9%E7%9B%AE%E7%9A%84%E4%BD%93%E4%BC%9A%E5%92%8C%E6%84%9F%E6%83%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/github_blog_myself.jpg">
+      <meta itemprop="name" content="duohappy">
+      <meta itemprop="description" content="怕什么真理无穷">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="duohappy's home">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          图像处理项目的体会和感想
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-02-12 12:00:00" itemprop="dateCreated datePublished" datetime="2021-02-12T12:00:00+08:00">2021-02-12</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">更新于</span>
+        <time title="修改时间：2021-04-04 19:17:48" itemprop="dateModified" datetime="2021-04-04T19:17:48+08:00">2021-04-04</time>
+      </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p><strong>文章未经允许，不可转载</strong></p>
+<h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>这一篇比较长的总结文章，不会讲网上已经泛滥成灾的内容，重点讲自己遇到的技术问题和心得。以图像处理项目为主线，穿插着技术和生活的体会，阅读起来可能有些枯燥，我尽量写得生动一些。</p>
+<p>想当年，我右手Python，左手SQL，内心装着产品和运营，成为了一名光荣的数据分析师，这样的日子并不长；<br>我现在右手Python，左手C++，内心装着甲方和乙方，成为了一名光荣的图像工程师，这一干就是好几年；</p>
+<p>首发于个人博客<a href="https://zhouww.life/">https://zhouww.life</a></p>
+<span id="more"></span>
+<p>成为图像工程师这几年里，主要用深度学习技术完成项目，项目中涉及到的内容：</p>
+<ul>
+<li>组建图像数据集<ul>
+<li>开源数据集</li>
+<li>项目特有数据集</li>
+</ul>
+</li>
+<li>标注数据集<ul>
+<li>标注指南</li>
+</ul>
+</li>
+<li>深度学习模型及训练<ul>
+<li>搭建深度学习服务器</li>
+<li>训练的心得</li>
+</ul>
+</li>
+<li>部署<ul>
+<li>PC机器</li>
+<li>嵌入式设备 jetson tx2</li>
+<li>Python C++联合编程</li>
+</ul>
+</li>
+<li>项目经验</li>
+</ul>
+<h1 id="技术和项目"><a href="#技术和项目" class="headerlink" title="技术和项目"></a>技术和项目</h1><p>当然，还有很多项目上的问题，时刻记住在心上的一点：技术的选择和实现，和项目的特性有重大关系，没有绝对好的技术，只有适合于这个项目的技术。项目上更多地追求可行性、稳定性和可维护性，而不是一个高大上的idea。</p>
+<p>信息系统项目管理师的考试中有十大管理：整体管理、范围管理、进度管理、成本管理、质量管理、人力资源管理、沟通管理、风险管理、干系人管理和采购管理。也就是说实施项目的过程，是一个复杂联动过程，是整体的齐头并进，有舍有得。举个例子，一个项目有多少内容、什么时候完成、有多少收益及公司给了多少人等等，这些都是很关键的因素。</p>
+<p>当然了，技术难道不重要么，肯定重要的，因为一个获得通过的立项，技术可行性必须得到论证。同时，也要论证财务可行性、组织可行性等等。如果再往上一层追溯，更重要的是项目必要性、市场预测等。作为技术人员，很容易偏向于技术考虑，如果在整体思考下项目，工作上有些事情可以想得更明白一些。</p>
+<p>好了，开始正式进入图像处理项目的正题。</p>
+<h1 id="组建图像数据集"><a href="#组建图像数据集" class="headerlink" title="组建图像数据集"></a>组建图像数据集</h1><p>在项目冷启动阶段，很可能还没有项目相关的数据，需要快速的部署模型到现场。这个时候，最实用的方法就是利用开源数据集，从开源数据集中提取符合项目要求的图片，进行训练。</p>
+<h2 id="开源数据集"><a href="#开源数据集" class="headerlink" title="开源数据集"></a>开源数据集</h2><p>常见的开源数据集：MS COCO、voc2007、voc2012、openimage等，提取图片的时候，特别注意一点，不仅仅是要提取含有目标的图片，这是正样本，也要提取不含有目标且场景相似的图片，例如<strong>识别水域的人</strong>是项目目标，那么包含人的图片要从数据集中提取出来，而包含水域环境且不含人的图片也要提取出来。</p>
+<p>对于常见的开源数据集，可以都写好python脚本，基本都可以做到随用随取。</p>
+<h2 id="项目特有的数据集"><a href="#项目特有的数据集" class="headerlink" title="项目特有的数据集"></a>项目特有的数据集</h2><p>这个数据集就是你们公司的数据资产，也是行业的天然壁垒。收集项目现场的图片，覆盖项目要求的各种场景，这是最重要的一步，没有做好这一步，其他的都可以免谈。</p>
+<p>利用深度学习算法处理图像数据，它的底气来自特定数据集。如果仅仅只有开源数据集，不愿意投入经历收集图片，没有建立一个流程不断补充现场图片，项目的效果很可能惨不忍睹。做一个比喻吧，可能不太准确，把深度学习模型想象成不聪明的小孩，数据集相当于老师，训练的过程就是教授知识，理想情况下老师有什么知识，小孩最后就会学到什么知识。如果项目的现场图片之前根本就没有见过，这个笨小孩肯定不会学到其中的知识，导致识别效果差。</p>
+<p>其中隐藏另一种情况，很容易被大家被忽视，如果数据集很复杂，需要学习的知识很难，笨小孩怎么教都是没有用的，根本就学不会，深度学习不是万能的，局限很多。再加上项目成本有限，不可能投入巨大的成本收集数据。这个时候解决的方法是降低难度，实际操作上对应的是减少场景变化，仅仅把深度学习模型用在单一场景。</p>
+<h1 id="标注数据集"><a href="#标注数据集" class="headerlink" title="标注数据集"></a>标注数据集</h1><p>收集到现场图片后，需要对图片进行标注，这个工作量非常大。如果想要效果好，就需要大量的图片，对应着相当大的图像标注任务。考虑工作的延续性，务必建立一个标注指南，确定标注的标准，什么为标注目标？什么图片不用标注且保留？什么图片不要标注且删除？</p>
+<p>这些问题看起来简单，但是每一个项目却都不相同，而且人有很大的主观性，没有建立一套标准，那么标注的质量就会很差。最后的结果自然就不会好了。</p>
+<h1 id="深度学习模型及训练"><a href="#深度学习模型及训练" class="headerlink" title="深度学习模型及训练"></a>深度学习模型及训练</h1><p>其实在一个大公司里，一般都会有相应的工作人员搭建好深度学习服务器的，我有过搭建深度学习服务器的经历，所以也写一写。</p>
+<h2 id="搭建深度学习服务器"><a href="#搭建深度学习服务器" class="headerlink" title="搭建深度学习服务器"></a>搭建深度学习服务器</h2><p>2018年，我搭建过服务器，也当过服务器的管理员。系统采用ubuntu，cuda9.0，安装的深度学习框架是tensorflow，服务器上的2块硬盘做raid1用装系统，其他的硬盘做raid5作为数据盘。前置一个跳板机，每个人通过跳板机进入服务器。 </p>
+<p>现在在自己的home目录里，安装了cuda10.0，darknet，cudnn7.6.5，nccl等，只要是自己用的，全部安装到自己的home目录下，很少用apt安装，一般采用源码编译。</p>
+<h2 id="训练心得"><a href="#训练心得" class="headerlink" title="训练心得"></a>训练心得</h2><p>建立测试数据集，关切过拟合问题</p>
+<h1 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h1><p>根据项目特点，选择合适的硬件设备，重点考虑成本和维护因素，也要针对硬件进行模型优化。</p>
+<h2 id="PC机器"><a href="#PC机器" class="headerlink" title="PC机器"></a>PC机器</h2><p>谈一个大家可能遇到比较少的情况吧，一台PC机器上有多块GPU，这台设备负责处理十个左右视频流的分析。我是怎么处理的呢</p>
+<ul>
+<li>建立一个对象池，对象池有和GPU相同数量的对象</li>
+<li>封装对象池成为一个单例（单例设计模式）</li>
+<li>创建与视频流相同数量的线程，每个线程从对象池中获取对象，用于视频分析</li>
+</ul>
+<h2 id="嵌入式设备-jetson-tx2"><a href="#嵌入式设备-jetson-tx2" class="headerlink" title="嵌入式设备 jetson tx2"></a>嵌入式设备 jetson tx2</h2><p>相信大家都会慢慢熟悉在嵌入式设备上部署深度学习模型，图像处理边缘化其实是一个大趋势，如何在嵌入式设备上部署训练好的模型及模型优化，是一个很重要的方向</p>
+<h2 id="Python-C-联合编程"><a href="#Python-C-联合编程" class="headerlink" title="Python C++联合编程"></a>Python C++联合编程</h2><p>参考这篇文章：<a href="https://zhouww.life/2021/02/01/Python%20C%20C++%E5%A6%82%E4%BD%95%E8%81%94%E5%90%88%E7%BC%96%E7%A8%8B/">Python_C_C++如何联合编程 </a></p>
+<h1 id="项目经验"><a href="#项目经验" class="headerlink" title="项目经验"></a>项目经验</h1><p>在深度学习应用于图像领域的最初几年，确实让人眼前一亮，甚至觉得这项技术无所不能。真正落地项目的时候才发现深度学习技术给项目现场人员多么大的压力，模型万一效果很差，现场人员基本束手无策，只能重新回去炼丹，和客户解释起来也十分费劲。</p>
+<p>在应<br>用深度学习技术到实际项目中，首先要思考项目现场环境是否可以优化，让场景更加单一，不那么多变，这一点很重要，很重要。经历过项目压力的人才会明白，深度学习可能带给你的是无助。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C++</a>
+              <a href="/tags/%E5%9B%BE%E5%83%8F/" rel="tag"># 图像</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+              <a href="/tags/%E9%A1%B9%E7%9B%AE/" rel="tag"># 项目</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/02/11/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E5%8F%8A%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E4%B8%80%E4%BA%9B%E6%84%9F%E6%82%9F/" rel="prev" title="深度学习框架学习及深度学习的一些感悟">
+                  <i class="fa fa-chevron-left"></i> 深度学习框架学习及深度学习的一些感悟
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">duohappy</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
